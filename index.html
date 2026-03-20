@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuzzDash - Les Tendances France</title>
+    <style>
+        :root { --p: #ff0050; --b: #000; --s: #1a1a1a; }
+        body { margin: 0; background: var(--b); color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
+        
+        /* Barre de navigation fixe */
+        .nav { height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: rgba(0,0,0,0.95); border-bottom: 1px solid #222; position: fixed; top: 0; width: 100%; z-index: 1000; box-sizing: border-box; }
+        .logo { font-weight: 900; color: var(--p); font-size: 22px; letter-spacing: -1px; text-decoration: none; }
+        .logo span { color: white; }
+        
+        /* Conteneur de Scroll TikTok Style */
+        #viewport { height: 100vh; width: 100vw; overflow-y: scroll; scroll-snap-type: y mandatory; padding-top: 60px; box-sizing: border-box; scroll-behavior: smooth; }
+        #viewport::-webkit-scrollbar { display: none; } /* Cache la barre de scroll */
+
+        .slide { height: calc(100vh - 60px); width: 100vw; scroll-snap-align: start; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border-bottom: 1px solid #111; }
+        
+        /* Lecteur Vidéo */
+        .v-container { width: 95%; max-width: 850px; height: 70%; border-radius: 15px; overflow: hidden; background: #111; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .vertical .v-container { width: 360px; height: 640px; max-height: 80vh; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* Barre de Partage */
+        .share-bar { display: flex; gap: 10px; margin-top: 15px; }
+        .sh-btn { padding: 10px 18px; border-radius: 25px; border: none; color: white; font-weight: bold; cursor: pointer; font-size: 13px; transition: 0.3s; }
+        .wa { background: #25D366; } 
+        .tw { background: #1DA1F2; }
+        .sh-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        /* Zone de Publicité (Tous les 4 scrolls) */
+        .ad-box { width: 300px; height: 250px; background: #1a1a1a; border: 1px dashed var(--p); display: flex; align-items: center; justify-content: center; text-align: center; color: #444; font-weight: bold; }
+        .ad-tag { position: absolute; top: 20px; color: var(--p); font-size: 10px; letter-spacing: 2px; }
+
+        /* Boutons de changement de mode */
+        .m-btn { background: #222; border: 1px solid #444; color: white; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .m-btn.active { background: var(--p); border-color: var(--p); }
+    </style>
+</head>
+<body>
+
+<div class="nav">
+    <a href="#" class="logo">BUZZ<span>DASH</span></a>
+    <div style="display:flex; gap:8px;">
+        <button id="btn-long" class="m-btn active" onclick="changeMode('long')">GAMING</button>
+        <button id="btn-short" class="m-btn" onclick="changeMode('short')">SHORTS</button>
+    </div>
+</div>
+
+<div id="viewport">
+    </div>
+
+<script>
+    // Configuration de ton Empire
+    const API_KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs'; // Ta clé API intégrée
+    let videoIds = [];
+    let currentMode = 'long';
+
+    // 1. Récupération des tendances YouTube France
+    async function fetchVideos(catId) {
+        const url = `https://www.googleapis.com/youtube/v3/videos?part=id&chart=mostPopular&maxResults=50&videoCategoryId=${catId}&regionCode=FR&key=${API_KEY}`;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            videoIds = data.items.map(item => item.id);
+            render();
+        } catch (error) {
+            document.getElementById('viewport').innerHTML = "<p style='text-align:center; padding:50px;'>Erreur de connexion. Vérifie ton API ou ta connexion.</p>";
+        }
+    }
+
+    // 2. Affichage du flux (Vidéos + Publicités)
+    function render() {
+        const container = document.getElementById
