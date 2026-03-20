@@ -3,112 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuzzDash | L'Empire du Flux</title>
+    <title>BuzzDash | L'Expérience Ultime</title>
     <style>
-        :root { --accent: #ff0050; --bg: #050505; --card: #121212; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+        :root { --accent: #ff0050; --bg: #0f0f0f; --side: #161616; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Roboto', Arial, sans-serif; overflow: hidden; display: flex; }
         
-        /* Menu */
-        .nav { height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; z-index: 1000; border-bottom: 1px solid #222; box-sizing: border-box; }
-        .logo { font-weight: 900; color: var(--accent); font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
-        .mode-switch { display: flex; gap: 10px; }
-        .btn { background: #222; border: 1px solid #444; color: white; padding: 10px 20px; border-radius: 30px; cursor: pointer; transition: 0.3s; font-weight: bold; }
-        .btn.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        /* Barre Latérale (Style YouTube) */
+        .sidebar { width: 240px; height: 100vh; background: var(--side); border-right: 1px solid #333; display: flex; flex-direction: column; padding-top: 80px; transition: 0.3s; }
+        .side-item { padding: 12px 24px; cursor: pointer; display: flex; align-items: center; gap: 15px; font-size: 14px; transition: 0.2s; }
+        .side-item:hover { background: #333; }
+        .side-item.active { background: #3f3f3f; font-weight: bold; border-left: 4px solid var(--accent); }
 
-        /* Conteneur de Scroll */
+        /* Contenu Principal */
+        .main-content { flex: 1; height: 100vh; position: relative; }
+        
+        /* Navigation Haute */
+        .nav { height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(10px); position: fixed; top: 0; right: 0; left: 0; z-index: 1000; border-bottom: 1px solid #333; }
+        .logo { font-weight: 900; color: var(--accent); font-size: 22px; letter-spacing: 1px; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn { background: #333; border: none; color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; text-transform: uppercase; }
+        .btn.active { background: white; color: black; font-weight: bold; }
+
+        /* Viewport de Scroll */
         #viewport { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
         #viewport::-webkit-scrollbar { display: none; }
 
-        .slide { height: 100vh; width: 100vw; scroll-snap-align: start; display: flex; justify-content: center; align-items: center; position: relative; padding-top: 35px; box-sizing: border-box; }
+        .slide { height: 100vh; width: 100%; scroll-snap-align: start; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
         
-        /* Cadrage Vidéo Dynamique */
-        .v-wrapper { width: 90%; max-width: 1000px; aspect-ratio: 16 / 9; background: #000; border-radius: 12px; overflow: hidden; border: 2px solid #222; transition: 0.5s; }
-        .vertical .v-wrapper { max-width: 400px; aspect-ratio: 9 / 16; height: 85vh; }
-        iframe { width: 100%; height: 100%; border: none; }
+        /* Lecteur Vidéo */
+        .v-card { width: 90%; max-width: 900px; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid #333; position: relative; }
+        .vertical .v-card { max-width: 400px; aspect-ratio: 9 / 16; height: 80vh; }
+        .v-card iframe { width: 100%; aspect-ratio: 16 / 9; border: none; }
+        .vertical .v-card iframe { height: 100%; aspect-ratio: unset; }
 
-        /* Flèches de navigation */
-        .nav-arrows { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 20px; z-index: 100; }
-        .arrow { background: rgba(255,255,255,0.1); border: 1px solid #444; color: white; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; backdrop-filter: blur(5px); }
-        .arrow:hover { background: var(--accent); }
+        /* Infos Youtubeur */
+        .v-info { width: 90%; max-width: 900px; margin-top: 15px; padding: 0 10px; }
+        .channel-link { color: #aaa; text-decoration: none; font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .channel-link:hover { color: white; text-decoration: underline; }
+        .channel-link::before { content: '●'; color: var(--accent); font-size: 10px; }
+
+        /* Flèches */
+        .arrows { position: fixed; right: 30px; bottom: 50px; display: flex; flex-direction: column; gap: 10px; z-index: 2000; }
+        .arr-btn { width: 45px; height: 45px; border-radius: 50%; border: none; background: var(--accent); color: white; cursor: pointer; font-size: 20px; box-shadow: 0 4px 15px rgba(255,0,80,0.4); }
+
+        @media (max-width: 800px) { .sidebar { display: none; } }
     </style>
 </head>
 <body>
 
-<div class="nav">
-    <div class="logo">BUZZDASH</div>
-    <div class="mode-switch">
-        <button id="b-gaming" class="btn active" onclick="changeMode('gaming')">GAMING</button>
-        <button id="b-shorts" class="btn" onclick="changeMode('shorts')">SHORTS</button>
+    <div class="sidebar">
+        <div class="side-item active">🏠 Accueil</div>
+        <div class="side-item">🔥 Tendances</div>
+        <div class="side-item">🎮 Gaming</div>
+        <div class="side-item">🎬 Shorts</div>
+        <div class="side-item">🎵 Musique</div>
+        <hr style="border: 0.5px solid #333; width: 90%; margin: 20px auto;">
+        <div class="side-item">👤 Ta chaîne</div>
+        <div class="side-item">🕒 Historique</div>
     </div>
-</div>
 
-<div class="nav-arrows">
-    <button class="arrow" onclick="scrollMove(-1)">↑</button>
-    <button class="arrow" onclick="scrollMove(1)">↓</button>
-</div>
+    <div class="main-content">
+        <div class="nav">
+            <div class="logo">BUZZDASH</div>
+            <div class="btn-group">
+                <button id="b-long" class="btn active" onclick="changeMode('long')">Vidéos</button>
+                <button id="b-short" class="btn" onclick="changeMode('short')">Shorts</button>
+            </div>
+        </div>
 
-<div id="viewport"></div>
+        <div class="arrows">
+            <button class="arr-btn" onclick="scrollMove(-1)">↑</button>
+            <button class="arr-btn" onclick="scrollMove(1)">↓</button>
+        </div>
+
+        <div id="viewport"></div>
+    </div>
 
 <script>
     const API_KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs'; 
-    let currentMode = 'gaming';
+    let currentMode = 'long';
 
-    async function fetchVideos(catId) {
-        const container = document.getElementById('viewport');
-        container.innerHTML = '<p style="text-align:center; margin-top:100px;">Chargement du flux...</p>';
+    async function loadContent(cat) {
+        const vp = document.getElementById('viewport');
+        vp.innerHTML = '<div style="padding:100px; text-align:center;">Chargement...</div>';
         
         try {
-            const r = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=id&chart=mostPopular&maxResults=15&regionCode=FR&videoCategoryId=${catId}&key=${API_KEY}`);
-            const d = await r.json();
-            container.innerHTML = '';
-            
-            d.items.forEach(v => {
-                const s = document.createElement('div');
-                s.className = `slide ${currentMode === 'shorts' ? 'vertical' : ''}`;
-                // On ajoute enablejsapi=1 pour pouvoir contrôler la vidéo
-                s.innerHTML = `
-                    <div class="v-wrapper">
-                        <iframe class="yt-player" src="https://www.youtube.com/embed/${v.id}?enablejsapi=1&autoplay=0&mute=1&rel=0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                    </div>`;
-                container.appendChild(s);
+            const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,id&chart=mostPopular&maxResults=15&regionCode=FR&videoCategoryId=${cat}&key=${API_KEY}`);
+            const data = await res.json();
+            vp.innerHTML = '';
+
+            data.items.forEach(item => {
+                const slide = document.createElement('div');
+                slide.className = `slide ${currentMode === 'short' ? 'vertical' : ''}`;
+                
+                slide.innerHTML = `
+                    <div class="v-card">
+                        <iframe class="yt-video" src="https://www.youtube.com/embed/${item.id}?enablejsapi=1&rel=0&autoplay=0&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
+                    <div class="v-info">
+                        <a href="https://www.youtube.com/channel/${item.snippet.channelId}" target="_blank" class="channel-link">
+                            ${item.snippet.channelTitle}
+                        </a>
+                        <p style="margin:5px 0; font-size:12px; color:#666;">Cliquer pour voir la chaîne</p>
+                    </div>
+                `;
+                vp.appendChild(slide);
             });
-        } catch (e) { alert("Erreur API"); }
+            setupObserver();
+        } catch (e) { console.error(e); }
     }
 
-    // Gestion du scroll et du son
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            const iframe = entry.target.querySelector('iframe');
-            if (entry.isIntersecting) {
-                // Play la vidéo visible
-                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-            } else {
-                // Pause la vidéo qui sort de l'écran
-                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-            }
-        });
-    }, { threshold: 0.6 });
+    function setupObserver() {
+        const options = { threshold: 0.8 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const iframe = entry.target.querySelector('iframe');
+                if (entry.isIntersecting) {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                } else {
+                    // STOP TOTAL quand on quitte la slide
+                    iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                }
+            });
+        }, options);
 
-    // On observe chaque slide après le rendu
-    function startObserving() {
-        setTimeout(() => {
-            document.querySelectorAll('.slide').forEach(s => observer.observe(s));
-        }, 1000);
+        document.querySelectorAll('.slide').forEach(s => observer.observe(s));
     }
 
-    function changeMode(mode) {
-        currentMode = mode;
-        document.getElementById('b-gaming').classList.toggle('active', mode === 'gaming');
-        document.getElementById('b-shorts').classList.toggle('active', mode === 'shorts');
-        fetchVideos(mode === 'gaming' ? 20 : 24).then(startObserving);
+    function changeMode(m) {
+        currentMode = m;
+        document.getElementById('b-long').classList.toggle('active', m === 'long');
+        document.getElementById('b-short').classList.toggle('active', m === 'short');
+        loadContent(m === 'long' ? 20 : 24);
     }
 
-    function scrollMove(dir) {
-        const v = document.getElementById('viewport');
-        v.scrollBy(0, window.innerHeight * dir);
+    function scrollMove(d) {
+        document.getElementById('viewport').scrollBy(0, window.innerHeight * d);
     }
 
-    fetchVideos(20).then(startObserving);
+    loadContent(20);
 </script>
 </body>
 </html>
