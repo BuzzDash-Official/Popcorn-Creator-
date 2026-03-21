@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BuzzDash | Trends & Search</title>
     
+    <meta name="google-adsense-account" content="ca-pub-4636323611777367">
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4636323611777367" crossorigin="anonymous"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&display=swap" rel="stylesheet">
@@ -14,7 +16,6 @@
 
         body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; overflow: hidden; display: flex; transition: 0.3s; }
         
-        /* Sidebar */
         .sidebar { width: 240px; height: 100vh; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding-top: 80px; z-index: 1001; }
         .side-item { padding: 15px 25px; cursor: pointer; color: #888; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
         .side-item:hover { color: var(--accent); background: rgba(0,123,255,0.05); }
@@ -25,7 +26,6 @@
         .settings-content.open { max-height: 150px; }
         .set-row { padding: 10px 25px; display: flex; justify-content: space-between; font-size: 12px; }
 
-        /* Nav */
         .nav { height: 70px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid var(--border); padding: 0 30px; }
         .logo { font-weight: 900; color: var(--accent); font-size: 24px; text-shadow: 0 0 10px var(--accent); }
         
@@ -41,13 +41,12 @@
 
         .slide { height: 100vh; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; justify-content: center; align-items: center; position: relative; }
         
-        /* Pubs */
+        /* Zones Pubs */
         .ad { position: absolute; background: rgba(0,123,255,0.03); border: 1px dashed #444; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; border-radius: 8px; }
         .ad-top { width: 800px; height: 90px; top: 85px; }
         .ad-left { width: 160px; height: 600px; left: 40px; }
         .ad-right { width: 160px; height: 600px; right: 80px; }
 
-        /* Vidéo */
         .v-box { width: 850px; display: flex; flex-direction: column; align-items: center; z-index: 5; margin-top: 40px; }
         .vertical .v-box { width: 380px; }
         .v-card { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
@@ -146,9 +145,9 @@
                 const s = document.createElement('div');
                 s.className = `slide ${cat === 24 ? 'vertical' : ''}`;
                 s.innerHTML = `
-                    <div class="ad ad-top">PUB ADSENSE</div>
-                    <div class="ad ad-left">PUB ADSENSE</div>
-                    <div class="ad ad-right">PUB ADSENSE</div>
+                    <div class="ad ad-top">ZONE PUB HAUT</div>
+                    <div class="ad ad-left">PUB LATERALE</div>
+                    <div class="ad ad-right">PUB LATERALE</div>
                     <div class="v-box">
                         <div class="v-card">
                             <iframe src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&mute=1" allow="autoplay; encrypted-media"></iframe>
