@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuzzDash | Final Build</title>
+    <title>BuzzDash | Final Premium</title>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4636323611777367" crossorigin="anonymous"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #9d00ff; --bg: #000000; --side: #080808; --text: #ffffff; --border: #1a1a1a; }
@@ -11,51 +14,53 @@
 
         body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; overflow: hidden; display: flex; transition: 0.3s; }
         
-        /* Sidebar */
+        /* Sidebar avec Paramètres */
         .sidebar { width: 240px; height: 100vh; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding-top: 80px; z-index: 1001; }
-        .side-item { padding: 15px 25px; cursor: pointer; color: #888; transition: 0.2s; }
+        .side-item { padding: 15px 25px; cursor: pointer; color: #888; }
         .side-item.active { border-left: 4px solid var(--accent); color: var(--accent); background: rgba(157,0,255,0.05); }
         .settings-header { padding: 15px 25px; cursor: pointer; border-top: 1px solid var(--border); margin-top: 20px; color: #aaa; display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; }
         .settings-content { max-height: 0; overflow: hidden; transition: 0.3s; }
         .settings-content.open { max-height: 150px; }
         .set-row { padding: 10px 25px; display: flex; justify-content: space-between; font-size: 12px; }
 
-        /* Nav */
+        /* Navigation */
         .nav { height: 70px; display: flex; justify-content: center; align-items: center; background: var(--bg); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid var(--border); opacity: 0.95; }
         .logo { position: absolute; left: 30px; font-weight: 900; color: var(--accent); font-size: 24px; text-shadow: 0 0 10px var(--accent); }
         .btn-group { display: flex; gap: 5px; background: rgba(128,128,128,0.1); padding: 5px; border-radius: 30px; border: 1px solid var(--border); }
         .btn { background: transparent; border: none; color: #888; padding: 10px 22px; border-radius: 30px; cursor: pointer; font-weight: bold; }
         .btn.active { background: var(--accent); color: white; }
 
-        /* Viewport snap */
+        /* Viewport centré */
         #viewport { flex: 1; height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
         #viewport::-webkit-scrollbar { display: none; }
 
         .slide { height: 100vh; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; justify-content: center; align-items: center; position: relative; }
         
-        /* Zones Pubs */
+        /* Zones Pubs corrigées */
         .ad { position: absolute; background: rgba(157,0,255,0.03); border: 1px dashed #444; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; border-radius: 8px; }
         .ad-top { width: 800px; height: 90px; top: 85px; }
         .ad-left { width: 160px; height: 600px; left: 40px; }
         .ad-right { width: 160px; height: 600px; right: 80px; }
 
-        /* Vidéo unique au milieu */
-        .v-box { width: 900px; display: flex; flex-direction: column; align-items: center; z-index: 5; }
-        .vertical .v-box { width: 400px; }
-        .v-card { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
-        .vertical .v-card { aspect-ratio: 9/16; height: 75vh; }
+        /* Conteneur Vidéo au milieu */
+        .v-box { width: 850px; display: flex; flex-direction: column; align-items: center; z-index: 5; margin-top: 40px; }
+        .vertical .v-box { width: 380px; }
+        .v-card { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .vertical .v-card { aspect-ratio: 9/16; height: 72vh; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        .v-info { width: 100%; margin-top: 15px; display: flex; justify-content: space-between; }
-        .pseudo { color: var(--accent); font-weight: 900; }
-        .title { opacity: 0.7; font-size: 14px; max-width: 70%; text-align: right; }
+        /* Pseudo et Titre en bas */
+        .v-info { width: 100%; margin-top: 15px; display: flex; align-items: center; gap: 20px; }
+        .pseudo { color: var(--accent); font-weight: 900; font-size: 16px; white-space: nowrap; }
+        .title { opacity: 0.7; font-size: 13px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* Flèches */
-        .arrows { position: fixed; right: 25px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 20px; z-index: 1100; }
-        .arrow { background: var(--side); border: 1px solid var(--border); color: var(--text); width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: 0.2s; }
-        .arrow:hover { background: var(--accent); color: white; }
+        /* Flèches de navigation */
+        .arrows { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 1100; }
+        .arrow { background: var(--side); border: 1px solid var(--border); color: var(--text); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+        .arrow:hover { background: var(--accent); color: white; transform: scale(1.1); }
 
-        @media (max-width: 1200px) { .ad-left, .ad-right, .sidebar { display: none; } }
+        @media (max-width: 1300px) { .ad-left, .ad-right { display: none; } }
+        @media (max-width: 1000px) { .sidebar { display: none; } }
     </style>
 </head>
 <body>
@@ -85,7 +90,8 @@
     <div id="viewport"></div>
 
 <script>
-    const KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs'; //
+    // TA CLÉ API YOUTUBE
+    const KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs'; 
     let currentPos = 0;
 
     function navMove(dir) {
@@ -96,8 +102,7 @@
     }
 
     function toggleTheme() {
-        const isLight = document.getElementById('p-light').checked;
-        document.body.classList.toggle('light-mode', isLight);
+        document.body.classList.toggle('light-mode', document.getElementById('p-light').checked);
     }
 
     function changeMode(cat) {
@@ -109,18 +114,18 @@
 
     async function load(cat) {
         const vp = document.getElementById('viewport');
-        vp.innerHTML = '<div style="padding-top:200px; text-align:center;">Chargement...</div>';
+        vp.innerHTML = '<div style="padding-top:200px; text-align:center; color:#9d00ff;">BuzzDash est en route...</div>';
         try {
-            const r = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,id&chart=mostPopular&maxResults=40&regionCode=FR&videoCategoryId=${cat}&key=${KEY}`);
+            const r = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,id&chart=mostPopular&maxResults=30&regionCode=FR&videoCategoryId=${cat}&key=${KEY}`);
             const d = await r.json();
             vp.innerHTML = '';
             d.items.forEach(v => {
                 const s = document.createElement('div');
                 s.className = `slide ${cat === 24 ? 'vertical' : ''}`;
                 s.innerHTML = `
-                    <div class="ad ad-top">PUB ADSENSE TOP</div>
-                    <div class="ad ad-left">PUB ADSENSE LEFT</div>
-                    <div class="ad ad-right">PUB ADSENSE RIGHT</div>
+                    <div class="ad ad-top">ZONE PUB HAUT</div>
+                    <div class="ad ad-left">PUB LATERALE</div>
+                    <div class="ad ad-right">PUB LATERALE</div>
                     <div class="v-box">
                         <div class="v-card">
                             <iframe src="https://www.youtube.com/embed/${v.id}?enablejsapi=1&mute=1" allow="autoplay; encrypted-media"></iframe>
@@ -133,7 +138,7 @@
                 vp.appendChild(s);
             });
             initObs();
-        } catch(e) { console.log(e); }
+        } catch(e) { console.log("Erreur API"); }
     }
 
     function initObs() {
@@ -147,7 +152,7 @@
                     ifr.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
                 }
             });
-        }, { threshold: 0.7 });
+        }, { threshold: 0.8 });
         document.querySelectorAll('.slide').forEach(s => observer.observe(s));
     }
 
