@@ -1,2 +1,1 @@
-[ads.txt](https://github.com/user-attachments/files/26157413/ads.txt)
 google.com, pub-4636323611777367, DIRECT, f08c47fec0942fa0
