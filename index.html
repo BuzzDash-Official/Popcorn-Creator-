@@ -46,4 +46,109 @@
 
         /* Flèches de navigation */
         .nav-arrows { position: fixed; right: 30px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 100; }
-        .arrow { background: rgba(255,255,255,0.05); border: 1
+        .arrow { background: rgba(255,255,255,0.05); border: 1px solid #222; color: white; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 22px; transition: 0.3s; }
+        .arrow:hover { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        
+        @media (max-width: 900px) { .sidebar { display: none; } .nav { left: 0; } .nav-arrows { display: none; } }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="side-item active">🏠 Accueil</div>
+    </div>
+
+    <div class="main-content">
+        <div class="nav">
+            <div class="logo-abs">BUZZDASH</div>
+            <div class="btn-group">
+                <button id="b-gaming" class="btn active" onclick="changeMode('gaming')">Gaming</button>
+                <button id="b-shorts" class="btn" onclick="changeMode('shorts')">Shorts</button>
+            </div>
+        </div>
+
+        <div class="nav-arrows">
+            <button class="arrow" onclick="scrollBy(0, -window.innerHeight)">↑</button>
+            <button class="arrow" onclick="scrollBy(0, window.innerHeight)">↓</button>
+        </div>
+
+        <div id="viewport"></div>
+    </div>
+
+<script>
+    // METS BIEN TA CLÉ CI-DESSOUS
+    const API_KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs'; 
+    let currentMode = 'gaming';
+
+    async function loadContent(catId) {
+        const container = document.getElementById('viewport');
+        container.innerHTML = '<p style="text-align:center; padding-top:100px;">Chargement ultra-fluide...</p>';
+        
+        try {
+            const r = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,id&chart=mostPopular&maxResults=15&regionCode=FR&videoCategoryId=${catId}&key=${API_KEY}`);
+            const d = await r.json();
+            container.innerHTML = '';
+            
+            d.items.forEach(v => {
+                // Filtre Shorts : on zappe les vidéos horizontales
+                if(currentMode === 'shorts' && v.contentDetails.definition === 'hd' && !v.snippet.title.toLowerCase().includes('short')) return;
+
+                const s = document.createElement('div');
+                s.className = `slide ${currentMode === 'shorts' ? 'vertical' : ''}`;
+                s.innerHTML = `
+                    <div class="v-wrapper">
+                        <iframe class="yt-player" src="https://www.youtube.com/embed/${v.id}?enablejsapi=1&autoplay=0&mute=1&rel=0&modestbranding=1" allow="autoplay; encrypted-media"></iframe>
+                    </div>
+                    <div class="v-info">
+                        <a href="https://www.youtube.com/channel/${v.snippet.channelId}" target="_blank" class="channel-name">@${v.snippet.channelTitle}</a>
+                    </div>`;
+                container.appendChild(s);
+            });
+            startObserving();
+        } catch (e) { alert("Erreur API YouTube."); }
+    }
+
+    // Gestion du Son (Stop Brouhaha) Simplifiée
+    function startObserving() {
+        // On attend que les iframes chargent un peu
+        setTimeout(() => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const iframe = entry.target.querySelector('iframe');
+                    if (entry.isIntersecting) {
+                        // Vidéo visible -> PLAY
+                        iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                        iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+                    } else {
+                        // Vidéo sortante -> PAUSE + MUTE
+                        iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                        iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
+                    }
+                });
+            }, { threshold: 0.6 }); // Déclenche à 60% de visibilité
+
+            document.querySelectorAll('.slide').forEach(s => observer.observe(s));
+        }, 1000);
+    }
+
+    function changeMode(mode) {
+        currentMode = mode;
+        document.getElementById('b-gaming').classList.toggle('active', mode === 'gaming');
+        document.getElementById('b-shorts').classList.toggle('active', mode === 'shorts');
+        loadContent(mode === 'gaming' ? 20 : 24);
+    }
+
+    // Premier chargement
+    loadContent(20);
+
+    // Patch pour gérer le changement de son via un clic utilisateur (obligatoire pour autoplay)
+    window.addEventListener('click', () => {
+        const activeSlide = document.querySelector('.slide:nth-child(' + (Math.round(document.getElementById('viewport').scrollTop / window.innerHeight) + 1) + ')');
+        if(activeSlide) {
+            const iframe = activeSlide.querySelector('iframe');
+            iframe.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
+        }
+    }, { once: true }); // Ne s'exécute qu'une fois
+</script>
+</body>
+</html>
