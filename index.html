@@ -3,75 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuzzDash | Ultimate Control</title>
-    
-    <meta name="google-adsense-account" content="ca-pub-4636323611777367">
-
+    <title>BuzzDash | Final Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #007bff; --bg: #000000; --side: #080808; --text: #ffffff; --border: #1a1a1a; --card: #111; }
-        .light-mode { --bg: #f0f0f0; --side: #ffffff; --text: #000000; --border: #dddddd; --card: #fff; }
-
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; display: flex; transition: 0.3s; height: 100vh; overflow: hidden; }
+        :root { --accent: #007bff; --bg: #000; --side: #080808; --text: #fff; --border: #1a1a1a; --card: #111; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; display: flex; height: 100vh; overflow: hidden; }
         
-        .sidebar { width: 240px; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding-top: 80px; z-index: 1001; flex-shrink: 0; }
-        .side-item { padding: 10px 25px; cursor: pointer; color: #888; transition: 0.2s; display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
-        .side-item:hover { color: var(--accent); }
+        /* SIDEBAR */
+        .sidebar { width: 250px; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding-top: 80px; z-index: 1001; }
+        .filter-label { padding: 15px 25px 5px; font-size: 11px; color: #555; font-weight: bold; text-transform: uppercase; }
+        .side-item { padding: 10px 25px; cursor: pointer; color: #888; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
         .side-item.active { color: var(--accent); font-weight: bold; }
-        
-        .dot { width: 10px; height: 10px; border: 2px solid #444; border-radius: 50%; display: inline-block; }
+        .dot { width: 8px; height: 8px; border: 2px solid #333; border-radius: 50%; }
         .active .dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px var(--accent); }
 
-        .filter-label { padding: 20px 25px 5px; font-size: 11px; color: #555; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-
+        /* NAV */
         .nav { height: 70px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid var(--border); padding: 0 30px; }
-        .logo { font-weight: 900; color: var(--accent); font-size: 24px; text-shadow: 0 0 10px var(--accent); }
-        .search-area { display: flex; align-items: center; flex: 1; max-width: 500px; margin: 0 20px; gap: 10px; }
+        .search-area { display: flex; align-items: center; gap: 10px; flex: 1; max-width: 600px; margin: 0 20px; }
         .search-bar { flex: 1; background: #111; border: 1px solid var(--border); padding: 10px 15px; border-radius: 20px; color: white; outline: none; }
-        .country-select { background: #111; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 15px; font-size: 12px; }
+        .select-ui { background: #111; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 12px; font-size: 12px; cursor: pointer; }
 
-        .btn-group { display: flex; gap: 5px; background: rgba(128,128,128,0.1); padding: 5px; border-radius: 30px; border: 1px solid var(--border); }
-        .btn { background: transparent; border: none; color: #888; padding: 8px 18px; border-radius: 30px; cursor: pointer; font-weight: bold; }
-        .btn.active { background: var(--accent); color: white; }
-
-        #main-content { flex: 1; margin-top: 70px; overflow-y: auto; height: calc(100vh - 70px); position: relative; }
-        .ad-spot { background: rgba(255,255,255,0.03); border: 1px dashed #333; color: #555; font-size: 10px; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin: 15px; }
-        .ad-top-grid { height: 90px; width: calc(100% - 30px); }
-
-        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 15px 30px 30px; }
-        .v-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: 0.2s; position: relative; }
-        .v-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        /* CONTENT */
+        #main-content { flex: 1; margin-top: 70px; overflow-y: auto; position: relative; height: calc(100vh - 70px); }
+        .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
+        .v-card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
+        .v-card:hover { border-color: var(--accent); transform: translateY(-3px); }
         .thumb { width: 100%; aspect-ratio: 16/9; background-size: cover; background-position: center; }
-        .v-meta { padding: 12px; }
-        .v-title { font-size: 13px; font-weight: bold; color: var(--text); height: 38px; overflow: hidden; }
+        .v-title { padding: 10px; font-size: 13px; font-weight: bold; height: 35px; overflow: hidden; }
 
+        /* SHORTS */
         #shorts-area { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; display: none; }
         #shorts-area::-webkit-scrollbar { display: none; }
         .short-slide { height: 100%; display: flex; justify-content: center; align-items: center; scroll-snap-align: start; }
         .short-box { height: 85vh; aspect-ratio: 9/16; background: #000; border-radius: 15px; overflow: hidden; border: 1px solid var(--border); }
-        
-        .arrows { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: none; flex-direction: column; gap: 15px; z-index: 1100; }
-        .arrow { background: var(--side); border: 1px solid var(--border); color: var(--text); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
 
-        #player-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; }
-        .close-player { position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer; }
-        #player-iframe { width: 85%; aspect-ratio: 16/9; max-width: 1100px; border: 1px solid var(--accent); }
+        /* UI ELEMENTS */
+        .btn-group { display: flex; gap: 5px; background: #111; padding: 5px; border-radius: 30px; }
+        .btn { background: transparent; border: none; color: #888; padding: 8px 15px; border-radius: 30px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .btn.active { background: var(--accent); color: white; }
+        .arrows { position: fixed; right: 20px; top: 50%; display: none; flex-direction: column; gap: 10px; }
+        .arrow { background: #111; border: 1px solid var(--border); color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
 
-        .share-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; border: none; padding: 5px 10px; border-radius: 10px; font-size: 10px; cursor: pointer; opacity: 0; transition: 0.3s; }
-        .v-card:hover .share-btn { opacity: 1; }
+        #player-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; }
+        #player-iframe { width: 85%; aspect-ratio: 16/9; max-width: 1000px; border: 1px solid var(--accent); }
     </style>
 </head>
 <body>
 
     <div class="nav">
-        <div class="logo">BUZZDASH</div>
+        <div style="font-weight:900; color:var(--accent); font-size:22px;">BUZZDASH</div>
         <div class="search-area">
-            <select id="countrySelect" class="country-select" onchange="load()">
+            <select id="ageSelect" class="select-ui" onchange="load()">
+                <option value="all">👶Âge: Tous</option>
+                <option value="kids">🧒 5-12 ans</option>
+                <option value="teens">👦 13-18 ans</option>
+                <option value="adults">🧔 18-30 ans</option>
+            </select>
+            <select id="countrySelect" class="select-ui" onchange="load()">
                 <option value="FR">🇫🇷 France</option>
                 <option value="US">🇺🇸 USA</option>
-                <option value="GB">🇬🇧 UK</option>
+                <option value="UA">🇺🇦 Ukraine</option>
             </select>
-            <input type="text" id="searchInput" class="search-bar" placeholder="Rechercher..." onkeypress="handleSearch(event)">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Rechercher..." onkeypress="if(event.key==='Enter')load(this.value)">
         </div>
         <div class="btn-group">
             <button id="b-long" class="btn active" onclick="switchType('long')">Vidéos</button>
@@ -80,21 +73,16 @@
     </div>
 
     <div class="sidebar">
-        <div class="filter-label">THERMOMÈTRE BUZZ</div>
-        <div class="side-item active" onclick="setPop('pop', this)"><span>🔥 Populaires</span> <div class="dot"></div></div>
-        <div class="side-item" onclick="setPop('neutre', this)"><span>⚖️ Neutre</span> <div class="dot"></div></div>
-        <div class="side-item" onclick="setPop('froid', this)"><span>🧊 Froid</span> <div class="dot"></div></div>
+        <div class="filter-label">THERMOMÈTRE</div>
+        <div id="f-pop" class="side-item active" onclick="setPop('pop')"><span>🔥 Populaires</span> <div class="dot"></div></div>
+        <div id="f-froid" class="side-item" onclick="setPop('froid')"><span>🧊 Froid</span> <div class="dot"></div></div>
         
-        <div class="filter-label">CATÉGORIES</div>
-        <div id="f-all" class="side-item active" onclick="setCat('all', this)"><span>🎬 Tout</span> <div class="dot"></div></div>
-        <div id="f-gaming" class="side-item" onclick="setCat('gaming', this)"><span>🎮 Gaming</span> <div class="dot"></div></div>
-        <div id="f-live" class="side-item" onclick="setCat('live', this)"><span>🔴 Directs</span> <div class="dot"></div></div>
+        <div class="filter-label">FILTRES (CUMULABLES)</div>
+        <div id="f-gaming" class="side-item" onclick="toggleCat('gaming')"><span>🎮 Jeux Vidéo</span> <div class="dot"></div></div>
+        <div id="f-live" class="side-item" onclick="toggleCat('live')"><span>🔴 Directs</span> <div class="dot"></div></div>
 
-        <div style="margin-top:auto; border-top: 1px solid var(--border); padding: 15px;">
-             <div style="font-size: 11px; color:#555; margin-bottom:10px;">MODE SOMBRE</div>
-             <input type="checkbox" id="p-light" onchange="toggleTheme()"> Mode Clair
-             <br><br>
-             <input type="checkbox" id="p-son"> Son Auto
+        <div style="margin-top:auto; padding:20px; border-top:1px solid var(--border);">
+            <label style="font-size:12px; color:#555;"><input type="checkbox" id="p-son"> Son Auto</label>
         </div>
     </div>
 
@@ -104,78 +92,67 @@
     </div>
 
     <div id="main-content">
-        <div id="ad-top-grid" class="ad-spot ad-top-grid">PUB BANNIÈRE HAUTE</div>
         <div id="grid-area" class="video-grid"></div>
         <div id="shorts-area"></div>
     </div>
 
-    <div id="player-overlay">
-        <span class="close-player" onclick="closePlayer()">×</span>
+    <div id="player-overlay" onclick="closePlayer()">
         <iframe id="player-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
 
 <script>
-    const KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs'; 
-    let currentType = 'long';
-    let currentPop = 'pop';
-    let currentCat = 'all';
-    let currentPos = 0;
+    const KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs';
+    let type = 'long', pop = 'pop', isGaming = false, isLive = false;
 
-    function handleSearch(e) { if (e.key === 'Enter') load(e.target.value); }
-    function toggleTheme() { document.body.classList.toggle('light-mode', document.getElementById('p-light').checked); }
-
-    function setPop(val, el) {
-        currentPop = val;
-        el.parentElement.querySelectorAll('.side-item').forEach(i => { if(i.innerText.includes('🔥') || i.innerText.includes('⚖️') || i.innerText.includes('🧊')) i.classList.remove('active')});
-        el.classList.add('active');
+    function setPop(p) {
+        pop = p;
+        document.getElementById('f-pop').classList.toggle('active', p === 'pop');
+        document.getElementById('f-froid').classList.toggle('active', p === 'froid');
         load();
     }
 
-    function setCat(val, el) {
-        currentCat = val;
-        document.getElementById('f-all').classList.remove('active');
-        document.getElementById('f-gaming').classList.remove('active');
-        document.getElementById('f-live').classList.remove('active');
-        el.classList.add('active');
+    function toggleCat(cat) {
+        if(cat === 'gaming') isGaming = !isGaming;
+        if(cat === 'live') isLive = !isLive;
+        document.getElementById('f-gaming').classList.toggle('active', isGaming);
+        document.getElementById('f-live').classList.toggle('active', isLive);
         load();
     }
 
-    function switchType(type) {
-        currentType = type;
-        document.getElementById('b-long').classList.toggle('active', type === 'long');
-        document.getElementById('b-short').classList.toggle('active', type === 'short');
-        document.getElementById('grid-area').style.display = type === 'long' ? 'grid' : 'none';
-        document.getElementById('ad-top-grid').style.display = type === 'long' ? 'flex' : 'none';
-        document.getElementById('shorts-area').style.display = type === 'short' ? 'block' : 'none';
-        document.getElementById('nav-arrows').style.display = type === 'short' ? 'flex' : 'none';
+    function switchType(t) {
+        type = t;
+        document.getElementById('b-long').classList.toggle('active', t === 'long');
+        document.getElementById('b-short').classList.toggle('active', t === 'short');
+        document.getElementById('grid-area').style.display = t === 'long' ? 'grid' : 'none';
+        document.getElementById('shorts-area').style.display = t === 'short' ? 'block' : 'none';
+        document.getElementById('nav-arrows').style.display = t === 'short' ? 'flex' : 'none';
         load();
-    }
-
-    function navMove(dir) {
-        const sa = document.getElementById('shorts-area');
-        currentPos += dir * window.innerHeight;
-        if(currentPos < 0) currentPos = 0;
-        sa.scrollTo({ top: currentPos, behavior: 'smooth' });
     }
 
     async function load(query = "") {
-        let region = document.getElementById('countrySelect').value;
-        let order = "viewCount";
-        if(currentPop === 'froid') order = "date";
-        if(currentPop === 'neutre') order = "relevance";
-
-        let q = query || (currentCat === 'gaming' ? "gaming" : "buzz");
-        let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&regionCode=${region}&relevanceLanguage=${region.toLowerCase()}&type=video&order=${order}&q=${encodeURIComponent(q)}&key=${KEY}`;
+        const country = document.getElementById('countrySelect').value;
+        const age = document.getElementById('ageSelect').value;
+        let order = pop === 'pop' ? "viewCount" : "date";
         
-        if(currentCat === 'live') url += "&eventType=live";
-        if(currentCat === 'gaming') url += "&videoCategoryId=20";
-        if(currentType === 'short') url += "&videoDuration=short";
+        let q = query;
+        if(!q) {
+            if(age === 'kids') q = "dessin animé enfant";
+            else if(age === 'teens') q = "funny entertainment";
+            else if(age === 'adults') q = "actu buzz";
+            else q = "trending";
+        }
+        if(isGaming) q += " gaming";
+
+        let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&regionCode=${country}&relevanceLanguage=${country.toLowerCase()}&type=video&order=${order}&q=${encodeURIComponent(q)}&key=${KEY}`;
+        
+        if(isLive) url += "&eventType=live";
+        if(type === 'short') url += "&videoDuration=short";
 
         try {
-            const r = await fetch(url);
-            const d = await r.json();
-            render(d.items);
-        } catch(e) { console.log("Erreur API"); }
+            const res = await fetch(url);
+            const data = await res.json();
+            render(data.items);
+        } catch(e) { console.error("Erreur API"); }
     }
 
     function render(items) {
@@ -184,38 +161,31 @@
         grid.innerHTML = ''; shorts.innerHTML = '';
 
         items.forEach(item => {
-            const v = item.snippet;
             const id = item.id.videoId;
-            if(currentType === 'long') {
-                grid.innerHTML += `
-                    <div class="v-card" onclick="openPlayer('${id}')">
-                        <button class="share-btn" onclick="event.stopPropagation(); alert('Lien copié !')">🔗 Partager</button>
-                        <div class="thumb" style="background-image:url('${v.thumbnails.high.url}')"></div>
-                        <div class="v-meta"><div class="v-title">${v.title}</div></div>
-                    </div>`;
+            const v = item.snippet;
+            if(!id) return;
+
+            if(type === 'long') {
+                grid.innerHTML += `<div class="v-card" onclick="openPlayer('${id}')">
+                    <div class="thumb" style="background-image:url('${v.thumbnails.high.url}')"></div>
+                    <div class="v-title">${v.title}</div>
+                </div>`;
             } else {
-                shorts.innerHTML += `
-                    <div class="short-slide">
-                        <div class="short-box">
-                            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?enablejsapi=1&mute=1" frameborder="0"></iframe>
-                        </div>
-                    </div>`;
+                shorts.innerHTML += `<div class="short-slide"><div class="short-box">
+                    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?enablejsapi=1&mute=1" frameborder="0"></iframe>
+                </div></div>`;
             }
         });
-        if(currentType === 'short') initObs();
+        if(type === 'short') initObs();
     }
 
     function initObs() {
-        const obs = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const ifr = entry.target.querySelector('iframe');
-                if (ifr && entry.isIntersecting) {
-                    ifr.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-                } else if (ifr) {
-                    ifr.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-                }
+        const obs = new IntersectionObserver((es) => {
+            es.forEach(e => {
+                const ifr = e.target.querySelector('iframe');
+                if(ifr) ifr.contentWindow.postMessage(`{"event":"command","func":"${e.isIntersecting?'playVideo':'pauseVideo'}","args":""}`, '*');
             });
-        }, { threshold: 0.7 });
+        }, { threshold: 0.8 });
         document.querySelectorAll('.short-slide').forEach(s => obs.observe(s));
     }
 
@@ -227,6 +197,11 @@
     function closePlayer() {
         document.getElementById('player-overlay').style.display = 'none';
         document.getElementById('player-iframe').src = '';
+    }
+
+    function navMove(d) {
+        const s = document.getElementById('shorts-area');
+        s.scrollBy({ top: d * window.innerHeight, behavior: 'smooth' });
     }
 
     load();
