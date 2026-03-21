@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuzzDash | Live Trends</title>
+    <title>BuzzDash | Global Trends</title>
     
     <meta name="google-adsense-account" content="ca-pub-4636323611777367">
 
@@ -14,11 +14,11 @@
 
         body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; display: flex; transition: 0.3s; height: 100vh; overflow: hidden; }
         
+        /* SIDEBAR (GARDÉE) */
         .sidebar { width: 240px; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding-top: 80px; z-index: 1001; flex-shrink: 0; }
         .side-item { padding: 12px 25px; cursor: pointer; color: #888; transition: 0.2s; display: flex; align-items: center; gap: 10px; font-size: 14px; }
         .side-item:hover { color: var(--accent); background: rgba(0,123,255,0.05); }
         .side-item.active { border-left: 4px solid var(--accent); color: var(--accent); background: rgba(0,123,255,0.1); }
-        
         .filter-label { padding: 20px 25px 5px; font-size: 11px; color: #555; font-weight: bold; text-transform: uppercase; }
 
         .settings-header { padding: 15px 25px; cursor: pointer; border-top: 1px solid var(--border); margin-top: auto; color: #aaa; display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; }
@@ -26,18 +26,20 @@
         .settings-content.open { max-height: 150px; }
         .set-row { padding: 10px 25px; display: flex; justify-content: space-between; font-size: 12px; }
 
+        /* NAV + SÉLECTEUR DE PAYS */
         .nav { height: 70px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid var(--border); padding: 0 30px; }
         .logo { font-weight: 900; color: var(--accent); font-size: 24px; text-shadow: 0 0 10px var(--accent); }
-        .search-container { flex: 1; max-width: 400px; margin: 0 20px; }
-        .search-bar { width: 100%; background: #111; border: 1px solid var(--border); padding: 10px 15px; border-radius: 20px; color: white; outline: none; }
+        .search-area { display: flex; align-items: center; flex: 1; max-width: 500px; margin: 0 20px; gap: 10px; }
+        .search-bar { flex: 1; background: #111; border: 1px solid var(--border); padding: 10px 15px; border-radius: 20px; color: white; outline: none; }
         
+        .country-select { background: #111; border: 1px solid var(--border); color: #888; padding: 8px; border-radius: 15px; font-size: 12px; cursor: pointer; outline: none; }
+
         .btn-group { display: flex; gap: 5px; background: rgba(128,128,128,0.1); padding: 5px; border-radius: 30px; border: 1px solid var(--border); }
         .btn { background: transparent; border: none; color: #888; padding: 8px 18px; border-radius: 30px; cursor: pointer; font-weight: bold; }
         .btn.active { background: var(--accent); color: white; }
 
+        /* CONTENU */
         #main-content { flex: 1; margin-top: 70px; overflow-y: auto; height: calc(100vh - 70px); position: relative; }
-
-        /* PUBS */
         .ad-spot { background: rgba(255,255,255,0.03); border: 1px dashed #333; color: #555; font-size: 10px; display: flex; align-items: center; justify-content: center; border-radius: 8px; margin: 15px; }
         .ad-top-grid { height: 90px; width: calc(100% - 30px); }
 
@@ -48,29 +50,31 @@
         .v-meta { padding: 12px; }
         .v-title { font-size: 14px; font-weight: bold; color: var(--text); height: 40px; overflow: hidden; }
 
+        /* SHORTS + FLÈCHES */
         #shorts-area { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; display: none; }
         #shorts-area::-webkit-scrollbar { display: none; }
         .short-slide { height: 100%; display: flex; justify-content: center; align-items: center; scroll-snap-align: start; position: relative; }
         .short-box { height: 85vh; aspect-ratio: 9/16; background: #000; border-radius: 15px; overflow: hidden; border: 1px solid var(--border); z-index: 2; }
-        
-        .ad-side-short { position: absolute; width: 160px; height: 600px; top: 50%; transform: translateY(-50%); }
-        .ad-l { left: 40px; } .ad-r { right: 40px; }
-
         .arrows { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: none; flex-direction: column; gap: 15px; z-index: 1100; }
         .arrow { background: var(--side); border: 1px solid var(--border); color: var(--text); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; }
 
+        /* OVERLAY PLAYER */
         #player-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; }
         .close-player { position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer; }
         #player-iframe { width: 80%; aspect-ratio: 16/9; max-width: 1000px; border: 1px solid var(--accent); }
-
-        @media (max-width: 1200px) { .ad-side-short { display: none; } }
     </style>
 </head>
 <body>
 
     <div class="nav">
         <div class="logo">BUZZDASH</div>
-        <div class="search-container">
+        <div class="search-area">
+            <select id="countrySelect" class="country-select" onchange="load()">
+                <option value="FR">🇫🇷 France</option>
+                <option value="US">🇺🇸 USA</option>
+                <option value="GB">🇬🇧 UK</option>
+                <option value="">🌍 Monde</option>
+            </select>
             <input type="text" id="searchInput" class="search-bar" placeholder="Rechercher..." onkeypress="handleSearch(event)">
         </div>
         <div class="btn-group">
@@ -80,7 +84,7 @@
     </div>
 
     <div class="sidebar">
-        <div class="filter-label">THERMOMÈTRE FR</div>
+        <div class="filter-label">THERMOMÈTRE</div>
         <div id="f-pop" class="side-item active" onclick="setFilter('pop')">🔥 Populaires</div>
         <div id="f-neutre" class="side-item" onclick="setFilter('neutre')">⚖️ Neutre</div>
         <div id="f-froid" class="side-item" onclick="setFilter('froid')">🧊 Froid</div>
@@ -145,11 +149,15 @@
 
     async function load(query = "") {
         let order = "viewCount"; 
-        let q = query || "trending";
-        if(currentFilter === 'froid') { order = "date"; q = query || "nouveau"; }
+        let region = document.getElementById('countrySelect').value;
+        let q = query || (region === "FR" ? "trending france" : "trending");
+
+        if(currentFilter === 'froid') { order = "date"; q = query || "new"; }
         if(currentFilter === 'neutre') { order = "relevance"; q = query || "buzz"; }
 
-        let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&regionCode=FR&type=video&order=${order}&q=${encodeURIComponent(q)}&key=${KEY}`;
+        // Correction : On force la région sélectionnée pour éviter les vidéos hors-sujet
+        let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&type=video&order=${order}&q=${encodeURIComponent(q)}&key=${KEY}`;
+        if(region) url += `&regionCode=${region}`;
         if(currentType === 'short') url += "&videoDuration=short";
 
         try {
@@ -167,7 +175,6 @@
         items.forEach(item => {
             const v = item.snippet;
             const id = item.id.videoId;
-            
             if(currentType === 'long') {
                 grid.innerHTML += `
                     <div class="v-card" onclick="openPlayer('${id}')">
@@ -177,11 +184,9 @@
             } else {
                 shorts.innerHTML += `
                     <div class="short-slide">
-                        <div class="ad-spot ad-side-short ad-l">PUB LATERALE</div>
                         <div class="short-box">
                             <iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?enablejsapi=1&mute=1" frameborder="0"></iframe>
                         </div>
-                        <div class="ad-spot ad-side-short ad-r">PUB LATERALE</div>
                     </div>`;
             }
         });
@@ -192,10 +197,10 @@
         const obs = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const ifr = entry.target.querySelector('iframe');
-                if (entry.isIntersecting) {
+                if (ifr && entry.isIntersecting) {
                     ifr.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                     if(document.getElementById('p-son').checked) ifr.contentWindow.postMessage('{"event":"command","func":"unMute","args":""}', '*');
-                } else {
+                } else if (ifr) {
                     ifr.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
                 }
             });
