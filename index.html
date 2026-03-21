@@ -3,56 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POPCORN STREAM | Cinéma & Docs</title>
+    <title>POPCORN STREAM | Cinéma & Trailers</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        :root { --bg-color: #050505; --text-color: white; --accent: #facc15; --sidebar-bg: rgba(255,255,255,0.03); }
-        .light-mode { --bg-color: #f5f5f5; --text-color: #1a1a1a; --accent: #eab308; --sidebar-bg: rgba(0,0,0,0.03); }
+        :root { --bg-color: #050505; --text-color: white; --accent: #facc15; --sidebar-bg: #0d0d0d; }
+        .light-mode { --bg-color: #f5f5f5; --text-color: #1a1a1a; --accent: #eab308; --sidebar-bg: #ffffff; }
 
-        body { 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
-            transition: all 0.5s ease;
-            font-family: 'Inter', sans-serif;
-            margin: 0; overflow-x: hidden;
-        }
+        body { background-color: var(--bg-color); color: var(--text-color); transition: 0.5s; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
 
         /* --- INTRO STUDIO --- */
-        #studio-intro {
-            position: fixed; inset: 0; z-index: 1000;
-            background: radial-gradient(circle, #111 0%, #000 100%);
-            display: flex; justify-content: center; align-items: center;
-            animation: studioFadeOut 0.8s ease forwards 4.5s;
-        }
-        .studio-wrapper { display: flex; align-items: center; gap: 30px; }
-        .popcorn-mascot { position: relative; display: flex; justify-content: center; align-items: center; animation: swirlScale 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
-        .pop-emoji { font-size: 150px; filter: drop-shadow(0 0 30px rgba(250, 204, 21, 0.4)); }
-        .packaging-eye { position: absolute; font-size: 55px; top: 50%; left: 50%; transform: translate(-50%, -10%); opacity: 0; animation: eyeAppear 0.5s ease forwards 2.6s, blink 0.3s infinite 4s; }
-        .studio-name { font-family: 'Syncopate', sans-serif; font-size: 55px; font-weight: 700; color: var(--accent); text-transform: uppercase; opacity: 0; transform: translateX(-50px); filter: blur(10px); animation: textReveal 1.5s ease-out forwards 2.8s; }
-
-        @keyframes swirlScale { 0% { transform: rotate(-180deg) scale(0); opacity: 0; } 100% { transform: rotate(0deg) scale(1); opacity: 1; } }
+        #studio-intro { position: fixed; inset: 0; z-index: 1000; background: black; display: flex; justify-content: center; align-items: center; animation: studioFadeOut 0.8s ease forwards 4s; }
+        .studio-wrapper { display: flex; align-items: center; gap: 25px; }
+        .popcorn-mascot { position: relative; display: flex; justify-content: center; align-items: center; animation: swirlScale 2s forwards; }
+        .pop-emoji { font-size: 120px; filter: drop-shadow(0 0 20px var(--accent)); }
+        .packaging-eye { position: absolute; font-size: 50px; top: 50%; left: 50%; transform: translate(-50%, -10%); opacity: 0; animation: eyeAppear 0.5s forwards 2s, blink 0.3s infinite 3s; }
+        .studio-name { font-family: 'Syncopate', sans-serif; font-size: 50px; font-weight: 700; color: var(--accent); text-transform: uppercase; opacity: 0; animation: textReveal 1s forwards 2.5s; }
+        @keyframes swirlScale { 0% { transform: rotate(-180deg) scale(0); } 100% { transform: rotate(0) scale(1); } }
         @keyframes eyeAppear { to { opacity: 1; transform: translate(-50%, -10%) scale(1); } }
         @keyframes blink { 0%, 90%, 100% { transform: translate(-50%, -10%) scaleY(1); } 95% { transform: translate(-50%, -10%) scaleY(0); } }
-        @keyframes textReveal { to { opacity: 1; transform: translateX(0); filter: blur(0); } }
+        @keyframes textReveal { to { opacity: 1; filter: blur(0); } }
         @keyframes studioFadeOut { to { opacity: 0; visibility: hidden; } }
 
-        /* --- UI --- */
-        .sidebar { width: 280px; height: 100vh; position: fixed; left: 0; top: 0; padding: 40px 20px; border-right: 1px solid rgba(255,255,255,0.05); background: var(--sidebar-bg); z-index: 200; }
-        .main-content { margin-left: 280px; padding: 100px 50px; opacity: 0; animation: fadeInMain 1s ease forwards 4.8s; }
-        .top-bar { position: fixed; top: 0; left: 280px; right: 0; height: 80px; display: flex; align-items: center; padding: 0 50px; background: var(--bg-color); z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        /* --- INTERFACE --- */
+        .sidebar { width: 280px; height: 100vh; position: fixed; left: 0; top: 0; padding: 40px 20px; border-right: 1px solid rgba(128,128,128,0.1); background: var(--sidebar-bg); z-index: 200; }
+        .main-content { margin-left: 280px; padding: 110px 40px 40px; opacity: 0; animation: fadeInMain 1s forwards 4.2s; }
+        .top-bar { position: fixed; top: 0; left: 280px; right: 0; height: 85px; display: flex; align-items: center; padding: 0 40px; background: var(--bg-color); z-index: 100; border-bottom: 1px solid rgba(128,128,128,0.1); }
         
-        #settings-panel { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; background: rgba(255,255,255,0.03); border-radius: 10px; margin-top: 10px; }
-        #settings-panel.open { max-height: 200px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .movie-card { background: rgba(128,128,128,0.05); border-radius: 12px; overflow: hidden; transition: 0.3s; cursor: pointer; height: 100%; display: flex; flex-direction: column; }
+        .movie-card:hover { transform: scale(1.03); border: 1px solid var(--accent); }
 
-        .movie-card { background: rgba(255,255,255,0.02); border-radius: 15px; overflow: hidden; transition: 0.4s; border: 1px solid rgba(255,255,255,0.03); cursor: pointer; }
-        .movie-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        #settings-panel { max-height: 0; overflow: hidden; transition: 0.5s; background: rgba(255,255,255,0.05); border-radius: 8px; }
+        #settings-panel.open { max-height: 300px; padding: 15px; margin-top: 10px; }
 
-        /* --- PLAYER MODAL --- */
-        #player-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        /* PLAYER */
+        #player-modal { position: fixed; inset: 0; background: black; z-index: 2000; display: none; justify-content: center; align-items: center; }
         #player-modal.open { display: flex; }
-        .player-container { width: 80%; max-width: 1000px; aspect-video: 16/9; background: black; border: 5px solid white; box-shadow: 0 0 100px rgba(255,255,255,0.2); }
 
         @keyframes fadeInMain { to { opacity: 1; } }
     </style>
@@ -61,35 +48,38 @@
 
     <div id="studio-intro">
         <div class="studio-wrapper">
-            <div class="popcorn-mascot">
-                <div class="pop-emoji">🍿</div>
-                <div class="packaging-eye">👁️</div>
-            </div>
+            <div class="popcorn-mascot"><div class="pop-emoji">🍿</div><div class="packaging-eye">👁️</div></div>
             <div class="studio-name">Popcorn<br><span style="color:white">Stream</span></div>
         </div>
     </div>
 
     <aside class="sidebar">
-        <div class="text-2xl font-black text-yellow-500 mb-10 tracking-tighter italic">POPCORN STREAM</div>
-        <nav class="space-y-3 font-semibold text-gray-400">
-            <button onclick="changeCategory('films complets gratuits')" class="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-yellow-500 hover:text-black hover:font-bold transition"><span>🔥</span> <span>À la Une</span></button>
-            <button onclick="changeCategory('film action complet français')" class="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-yellow-500 hover:text-black hover:font-bold transition"><span>🎬</span> <span>Action</span></button>
-            <button onclick="changeCategory('film comedie complet français')" class="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-yellow-500 hover:text-black hover:font-bold transition"><span>😂</span> <span>Comédie</span></button>
-            <button onclick="changeCategory('film pour adolescent complet')" class="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-yellow-500 hover:text-black hover:font-bold transition"><span>🍿</span> <span>Pour Ados</span></button>
-            <button onclick="changeCategory('documentaire complet français')" class="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-yellow-500 hover:text-black hover:font-bold transition"><span>🌍</span> <span>Documentaires</span></button>
+        <div class="text-2xl font-black text-yellow-500 mb-10 italic tracking-tighter uppercase">Popcorn Stream</div>
+        
+        <nav class="space-y-2 text-gray-400 font-bold">
+            <button onclick="changeCategory('films complets français')" class="w-full text-left p-3 rounded-lg hover:bg-yellow-500 hover:text-black transition">🔥 À LA UNE</button>
+            <button onclick="changeCategory('film action complet')" class="w-full text-left p-3 rounded-lg hover:bg-yellow-500 hover:text-black transition">🎬 ACTION</button>
+            <button onclick="changeCategory('documentaire complet')" class="w-full text-left p-3 rounded-lg hover:bg-yellow-500 hover:text-black transition">🌍 DOCUMENTAIRES</button>
+            <button onclick="changeCategory('movie trailers 2024 2025')" class="w-full text-left p-3 rounded-lg hover:bg-yellow-500 hover:text-black transition">🎞️ BANDES-ANNONCES</button>
             
-            <hr class="border-white/10 my-6">
+            <div class="pt-6 pb-2 text-[10px] uppercase tracking-widest opacity-50">Configuration</div>
             
-            <button onclick="toggleSettings()" class="w-full flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition">
-                <span class="flex items-center space-x-3"><span>⚙️</span> <span>Paramètres</span></span>
-                <span id="arrow">▾</span>
+            <button onclick="toggleSettings()" class="w-full flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition">
+                <span>⚙️ PARAMÈTRES</span> <span id="arrow">▾</span>
             </button>
             
             <div id="settings-panel">
-                <div class="space-y-4 text-sm">
+                <div class="space-y-4 text-xs">
                     <div class="flex justify-between items-center">
-                        <span>Lumière :</span>
-                        <button onclick="document.body.classList.toggle('light-mode')" class="bg-yellow-500 text-black px-2 py-1 rounded text-[10px] font-bold">ON / OFF</button>
+                        <span>PAYS :</span>
+                        <select id="lang-select" onchange="refreshContent()" class="bg-black text-white p-1 rounded border border-gray-700">
+                            <option value="fr">🇫🇷 FRANCE</option>
+                            <option value="en">🇺🇸 USA</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>LUMIÈRE :</span>
+                        <button onclick="document.body.classList.toggle('light-mode')" class="bg-yellow-500 text-black px-2 py-1 rounded font-black">MODE</button>
                     </div>
                 </div>
             </div>
@@ -97,139 +87,99 @@
     </aside>
 
     <header class="top-bar">
-        <div class="w-2/3 relative">
-            <span class="absolute left-5 top-4 opacity-30">🔍</span>
-            <input type="text" id="search-input" placeholder="Rechercher un film, un doc, Kaizen..." 
-                   class="w-full bg-white/5 border border-white/10 rounded-2xl px-12 py-3.5 outline-none focus:border-yellow-500 transition">
+        <div class="w-full max-w-2xl relative">
+            <input type="text" id="search-input" placeholder="Rechercher un film, un trailer ou Kaizen..." 
+                   class="w-full bg-white/5 border border-white/10 rounded-xl px-12 py-3 outline-none focus:border-yellow-500 transition">
+            <span class="absolute left-4 top-3.5 opacity-40 text-xl">🔍</span>
         </div>
     </header>
 
     <main class="main-content">
-        <div class="mb-10">
-            <h2 id="category-title" class="text-4xl font-black italic uppercase tracking-tight">À LA UNE</h2>
-            <p class="text-gray-500">Le meilleur du cinéma gratuit sélectionné sur YouTube.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="movie-grid">
-            <p class="text-gray-600 col-span-4 text-center py-20">Chargement des projecteurs...</p>
-        </div>
+        <h2 id="current-title" class="text-3xl font-black mb-8 italic uppercase tracking-tighter">CHARGEMENT...</h2>
+        <div id="movie-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            </div>
     </main>
 
     <div id="player-modal">
-        <button onclick="closePlayer()" class="absolute top-10 right-10 text-5xl text-white opacity-50 hover:opacity-100 transition">&times;</button>
-        <div class="player-container">
+        <button onclick="closePlayer()" class="absolute top-8 right-8 text-4xl hover:text-yellow-500 transition font-bold">&times; FERMER</button>
+        <div class="w-[90%] max-w-5xl aspect-video">
             <iframe id="yt-player" width="100%" height="100%" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        <p class="text-yellow-500 font-mono mt-6 animate-pulse">Bonne séance sur Popcorn Stream 🍿</p>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-        const API_KEY = "AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs"; // Ta clé API intégrée !
-        const grid = document.getElementById('movie-grid');
+        const API_KEY = "AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs";
+        let currentQuery = "films complets français";
 
-        // --- FONCTIONS UI ---
         function toggleSettings() {
-            const panel = document.getElementById('settings-panel');
-            const arrow = document.getElementById('arrow');
-            panel.classList.toggle('open');
-            arrow.style.transform = panel.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+            document.getElementById('settings-panel').classList.toggle('open');
         }
 
-        function playMovie(videoId) {
-            const modal = document.getElementById('player-modal');
-            const player = document.getElementById('yt-player');
-            player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0`;
-            modal.classList.add('open');
-            document.body.style.overflow = 'hidden'; // Empêche le scroll derrière
+        function refreshContent() {
+            changeCategory(currentQuery);
+        }
+
+        async function fetchMovies(query) {
+            currentQuery = query;
+            const lang = document.getElementById('lang-select').value;
+            const langParam = (lang === 'fr') ? 'fr' : 'en';
+            const grid = document.getElementById('movie-grid');
+            const titleElem = document.getElementById('current-title');
+            
+            // On ajoute automatiquement "complet" ou "movie" selon la langue pour filtrer
+            let finalQuery = query;
+            if (lang === 'fr' && !query.includes('trailers')) finalQuery += " complet français";
+            if (lang === 'en' && !query.includes('trailers')) finalQuery += " full movie english";
+
+            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=16&q=${encodeURIComponent(finalQuery)}&type=video&relevanceLanguage=${langParam}&videoDuration=long&key=${API_KEY}`;
+            
+            // Si c'est des bandes-annonces, on enlève le filtre "long"
+            const finalUrl = query.includes('trailers') ? url.replace('&videoDuration=long', '&videoDuration=medium') : url;
+
+            try {
+                const res = await fetch(finalUrl);
+                const data = await res.json();
+                
+                grid.innerHTML = '';
+                titleElem.innerText = query.replace('film ', '').toUpperCase();
+
+                if (data.items) {
+                    data.items.forEach(item => {
+                        grid.innerHTML += `
+                            <div class="movie-card group" onclick="playMovie('${item.id.videoId}')">
+                                <img src="${item.snippet.thumbnails.high.url}" class="w-full aspect-video object-cover">
+                                <div class="p-4 flex-grow">
+                                    <h3 class="font-bold text-sm line-clamp-2 group-hover:text-yellow-500">${item.snippet.title}</h3>
+                                    <p class="text-[10px] text-gray-500 mt-2 uppercase tracking-widest">${item.snippet.channelTitle}</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (e) {
+                grid.innerHTML = "<p>Erreur de connexion à la base cinéma.</p>";
+            }
+        }
+
+        function changeCategory(q) { fetchMovies(q); }
+
+        function playMovie(id) {
+            document.getElementById('yt-player').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+            document.getElementById('player-modal').classList.add('open');
         }
 
         function closePlayer() {
-            const modal = document.getElementById('player-modal');
-            const player = document.getElementById('yt-player');
-            player.src = ""; // Arrête la vidéo
-            modal.classList.remove('open');
-            document.body.style.overflow = 'auto';
+            document.getElementById('yt-player').src = "";
+            document.getElementById('player-modal').classList.remove('open');
         }
 
-        // --- LOGIQUE API YOUTUBE ---
-        async function fetchMovies(query, title = "Résultats") {
-            document.getElementById('category-title').innerText = title;
-            grid.innerHTML = '<p class="text-gray-600 col-span-4 text-center py-20">Recherche dans les archives...</p>';
-
-            // On cherche des vidéos 'longues' (+20min) pour avoir de vrais films/docs
-            const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=16&q=${encodeURIComponent(query)}&type=video&videoDuration=long&key=${API_KEY}`;
-            
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                
-                if (data.items && data.items.length > 0) {
-                    displayMovies(data.items);
-                } else {
-                    grid.innerHTML = '<p class="text-gray-500 col-span-4 text-center py-20">Aucun film trouvé pour cette catégorie. Tentez une autre recherche !</p>';
-                }
-            } catch (error) {
-                console.error("Erreur API :", error);
-                grid.innerHTML = '<p class="text-red-500 col-span-4 text-center py-20">Erreur lors du chargement. Vérifiez votre clé API.</p>';
-            }
-        }
-
-        function displayMovies(movies) {
-            grid.innerHTML = ''; // On vide
-
-            movies.forEach(movie => {
-                const videoId = movie.id.videoId;
-                const title = movie.snippet.title;
-                const thumbnail = movie.snippet.thumbnails.high.url;
-                const channel = movie.snippet.channelTitle;
-
-                const html = `
-                    <div class="movie-card group" onclick="playMovie('${videoId}')">
-                        <div class="aspect-video bg-zinc-900 relative">
-                            <img src="${thumbnail}" class="w-full h-full object-cover opacity-80 transition group-hover:opacity-60" alt="${title}">
-                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/50">
-                                <span class="text-6xl scale-75 group-hover:scale-100 transition">▶️</span>
-                            </div>
-                        </div>
-                        <div class="p-5">
-                            <h3 class="font-bold text-lg truncate text-white group-hover:text-yellow-500 transition">${title}</h3>
-                            <p class="text-xs text-gray-500 mt-2 uppercase tracking-wider">${channel}</p>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += html;
-            });
-        }
-
-        // Changement de catégorie via Sidebar
-        function changeCategory(query) {
-            const titles = {
-                'films complets gratuits': 'À la Une',
-                'film action complet français': 'Action',
-                'film comedie complet français': 'Comédie',
-                'film pour adolescent complet': 'Pour Ados',
-                'documentaire complet français': 'Documentaires'
-            };
-            fetchMovies(query, titles[query] || 'Résultats');
-        }
-
-        // Barre de recherche
-        document.getElementById('search-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                const query = this.value;
-                if (query) {
-                    fetchMovies(query + " complet français", `Recherche : ${query}`);
-                }
-            }
+        // Recherche
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') fetchMovies(e.target.value);
         });
 
-        // --- CHARGEMENT INITIAL ---
-        // On attend que l'intro studio soit finie pour charger les films (pour ne pas ralentir l'animation)
-        setTimeout(() => {
-            fetchMovies('films complets gratuits', 'À la Une');
-        }, 4000);
-
+        // Start
+        setTimeout(() => fetchMovies('films complets français'), 4000);
     </script>
 </body>
 </html>
