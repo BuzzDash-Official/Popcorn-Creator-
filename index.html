@@ -3,64 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BuzzDash | Final Premium</title>
+    <title>BuzzDash | Search Edition</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4636323611777367" crossorigin="anonymous"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #9d00ff; --bg: #000000; --side: #080808; --text: #ffffff; --border: #1a1a1a; }
+        :root { --accent: #007bff; --bg: #000000; --side: #080808; --text: #ffffff; --border: #1a1a1a; }
         .light-mode { --bg: #f0f0f0; --side: #ffffff; --text: #000000; --border: #dddddd; }
 
         body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Poppins', sans-serif; overflow: hidden; display: flex; transition: 0.3s; }
         
-        /* Sidebar avec Paramètres */
         .sidebar { width: 240px; height: 100vh; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding-top: 80px; z-index: 1001; }
         .side-item { padding: 15px 25px; cursor: pointer; color: #888; }
-        .side-item.active { border-left: 4px solid var(--accent); color: var(--accent); background: rgba(157,0,255,0.05); }
+        .side-item.active { border-left: 4px solid var(--accent); color: var(--accent); background: rgba(0,123,255,0.05); }
         .settings-header { padding: 15px 25px; cursor: pointer; border-top: 1px solid var(--border); margin-top: 20px; color: #aaa; display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; }
         .settings-content { max-height: 0; overflow: hidden; transition: 0.3s; }
         .settings-content.open { max-height: 150px; }
         .set-row { padding: 10px 25px; display: flex; justify-content: space-between; font-size: 12px; }
 
-        /* Navigation */
-        .nav { height: 70px; display: flex; justify-content: center; align-items: center; background: var(--bg); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid var(--border); opacity: 0.95; }
-        .logo { position: absolute; left: 30px; font-weight: 900; color: var(--accent); font-size: 24px; text-shadow: 0 0 10px var(--accent); }
+        /* Navigation avec Barre de Recherche */
+        .nav { height: 70px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid var(--border); padding: 0 30px; }
+        .logo { font-weight: 900; color: var(--accent); font-size: 24px; text-shadow: 0 0 10px var(--accent); }
+        
+        /* Style de la barre de recherche */
+        .search-container { flex: 1; max-width: 400px; margin: 0 20px; position: relative; }
+        .search-bar { width: 100%; background: #111; border: 1px solid var(--border); padding: 10px 15px; border-radius: 20px; color: white; font-family: inherit; outline: none; }
+        .search-bar:focus { border-color: var(--accent); }
+
         .btn-group { display: flex; gap: 5px; background: rgba(128,128,128,0.1); padding: 5px; border-radius: 30px; border: 1px solid var(--border); }
         .btn { background: transparent; border: none; color: #888; padding: 10px 22px; border-radius: 30px; cursor: pointer; font-weight: bold; }
         .btn.active { background: var(--accent); color: white; }
 
-        /* Viewport centré */
         #viewport { flex: 1; height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; }
         #viewport::-webkit-scrollbar { display: none; }
 
         .slide { height: 100vh; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; justify-content: center; align-items: center; position: relative; }
         
-        /* Zones Pubs corrigées */
-        .ad { position: absolute; background: rgba(157,0,255,0.03); border: 1px dashed #444; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; border-radius: 8px; }
+        /* Zones Pubs */
+        .ad { position: absolute; background: rgba(0,123,255,0.03); border: 1px dashed #444; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #555; border-radius: 8px; }
         .ad-top { width: 800px; height: 90px; top: 85px; }
         .ad-left { width: 160px; height: 600px; left: 40px; }
         .ad-right { width: 160px; height: 600px; right: 80px; }
 
-        /* Conteneur Vidéo au milieu */
+        /* Vidéo */
         .v-box { width: 850px; display: flex; flex-direction: column; align-items: center; z-index: 5; margin-top: 40px; }
         .vertical .v-box { width: 380px; }
-        .v-card { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .v-card { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
         .vertical .v-card { aspect-ratio: 9/16; height: 72vh; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* Pseudo et Titre en bas */
         .v-info { width: 100%; margin-top: 15px; display: flex; align-items: center; gap: 20px; }
-        .pseudo { color: var(--accent); font-weight: 900; font-size: 16px; white-space: nowrap; }
+        .pseudo { color: var(--accent); font-weight: 900; }
         .title { opacity: 0.7; font-size: 13px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* Flèches de navigation */
         .arrows { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 1100; }
         .arrow { background: var(--side); border: 1px solid var(--border); color: var(--text); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 18px; }
-        .arrow:hover { background: var(--accent); color: white; transform: scale(1.1); }
 
         @media (max-width: 1300px) { .ad-left, .ad-right { display: none; } }
-        @media (max-width: 1000px) { .sidebar { display: none; } }
+        @media (max-width: 1000px) { .sidebar, .search-container { display: none; } }
     </style>
 </head>
 <body>
@@ -76,6 +77,9 @@
 
     <div class="nav">
         <div class="logo">BUZZDASH</div>
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Rechercher une tendance..." onkeypress="handleSearch(event)">
+        </div>
         <div class="btn-group">
             <button id="b-20" class="btn active" onclick="changeMode(20)">Gaming</button>
             <button id="b-24" class="btn" onclick="changeMode(24)">Shorts</button>
@@ -90,9 +94,15 @@
     <div id="viewport"></div>
 
 <script>
-    // TA CLÉ API YOUTUBE
     const KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs'; 
     let currentPos = 0;
+    let currentCat = 20;
+
+    function handleSearch(e) {
+        if (e.key === 'Enter') {
+            load(currentCat, e.target.value);
+        }
+    }
 
     function navMove(dir) {
         const vp = document.getElementById('viewport');
@@ -106,20 +116,29 @@
     }
 
     function changeMode(cat) {
+        currentCat = cat;
         document.getElementById('b-20').classList.toggle('active', cat === 20);
         document.getElementById('b-24').classList.toggle('active', cat === 24);
         currentPos = 0;
-        load(cat);
+        load(cat, document.getElementById('searchInput').value);
     }
 
-    async function load(cat) {
+    async function load(cat, query = "") {
         const vp = document.getElementById('viewport');
-        vp.innerHTML = '<div style="padding-top:200px; text-align:center; color:#9d00ff;">BuzzDash est en route...</div>';
+        vp.innerHTML = '<div style="padding-top:200px; text-align:center;">Recherche en cours...</div>';
+        
+        // Construction de l'URL de recherche YouTube
+        let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&regionCode=FR&videoEmbeddable=true&type=video&videoCategoryId=${cat}&key=${KEY}`;
+        if (query) url += `&q=${encodeURIComponent(query)}`;
+        if (cat === 24) url += `&videoDuration=short`; // Force les vidéos courtes pour le mode Shorts
+
         try {
-            const r = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,id&chart=mostPopular&maxResults=30&regionCode=FR&videoCategoryId=${cat}&key=${KEY}`);
+            const r = await fetch(url);
             const d = await r.json();
             vp.innerHTML = '';
-            d.items.forEach(v => {
+            d.items.forEach(item => {
+                const videoId = item.id.videoId;
+                const v = item.snippet;
                 const s = document.createElement('div');
                 s.className = `slide ${cat === 24 ? 'vertical' : ''}`;
                 s.innerHTML = `
@@ -128,11 +147,11 @@
                     <div class="ad ad-right">PUB LATERALE</div>
                     <div class="v-box">
                         <div class="v-card">
-                            <iframe src="https://www.youtube.com/embed/${v.id}?enablejsapi=1&mute=1" allow="autoplay; encrypted-media"></iframe>
+                            <iframe src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&mute=1" allow="autoplay; encrypted-media"></iframe>
                         </div>
                         <div class="v-info">
-                            <span class="pseudo">@${v.snippet.channelTitle}</span>
-                            <span class="title">${v.snippet.title}</span>
+                            <span class="pseudo">@${v.channelTitle}</span>
+                            <span class="title">${v.title}</span>
                         </div>
                     </div>`;
                 vp.appendChild(s);
