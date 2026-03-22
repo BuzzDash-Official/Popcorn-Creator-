@@ -3,232 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PopCorn Stream | Premium Cinema</title>
+    <title>PopCorn Stream | Premium Platform</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;700&display=swap');
 
         :root {
             --gold: #FFD700;
-            --danger: #E50914;
-            --bg-body: #050505;
+            --red: #E50914;
+            --bg: #050505;
+            --sidebar-w: 260px;
             --glass: rgba(255, 255, 255, 0.05);
-            --shadow-gold: 0 0 20px rgba(255, 215, 0, 0.2);
         }
 
-        * { box-sizing: border-box; transition: all 0.3s ease; }
         body {
-            margin: 0; background-color: var(--bg-body); color: #fff;
-            font-family: 'Montserrat', sans-serif; overflow-x: hidden;
+            margin: 0; background: var(--bg); color: #fff;
+            font-family: 'Poppins', sans-serif; overflow: hidden;
         }
 
-        /* --- 1. INTRO CINÉMATIQUE EMOJI 🍿 --- */
-        #loading-screen {
-            position: fixed; inset: 0; background: #000; z-index: 99999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        /* --- 1. CINÉMATIQUE D'ENTRÉE : RIDEAUX --- */
+        #intro-curtain {
+            position: fixed; inset: 0; z-index: 99999; display: flex; justify-content: center; align-items: center; background: #000;
         }
-
-        .pop-wrapper {
-            font-size: 100px; 
-            animation: spinStable 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        .curtain-panel {
+            position: absolute; width: 50%; height: 100%; background: #800000; 
+            border: 2px solid var(--red); transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
         }
+        .panel-left { left: 0; transform-origin: left; }
+        .panel-right { right: 0; transform-origin: right; }
 
-        .eye-container {
-            width: 80px; height: 45px; background: #fff; border-radius: 50%;
-            border: 5px solid #000; position: relative; overflow: hidden;
-            margin-top: -30px; opacity: 0; transform: scale(0);
-            animation: eyePop 0.5s forwards 1.6s, blink 3s infinite 2.5s;
+        .mascot-anim {
+            z-index: 100; text-align: center; opacity: 0; transition: 1s;
         }
+        .pop-spin { font-size: 80px; display: inline-block; animation: spinOnce 1.5s ease-out; }
+        .eye-pop { font-size: 40px; display: block; margin-top: -20px; opacity: 0; transform: scale(0); }
+        .logo-text { font-family: 'Bebas Neue'; font-size: 4rem; color: var(--gold); filter: blur(10px); transition: 1.5s; }
 
-        .eye-container::after {
-            content: ''; position: absolute; width: 30px; height: 30px; 
-            background: #000; border-radius: 50%; top: 5px; left: 25px;
-        }
+        @keyframes spinOnce { from { transform: rotate(-720deg) scale(0); } to { transform: rotate(0deg) scale(1); } }
+        @keyframes blinkEye { 0%, 90% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
 
-        .brand-reveal {
-            font-family: 'Bebas Neue'; font-size: 4rem; color: var(--gold);
-            letter-spacing: 5px; opacity: 0; transform: translateY(30px);
-            animation: textReveal 0.8s forwards 2.2s;
-        }
-
-        @keyframes spinStable { 0% { transform: rotate(-720deg) scale(0); } 100% { transform: rotate(0deg) scale(1); } }
-        @keyframes eyePop { to { opacity: 1; transform: scale(1); } }
-        @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
-        @keyframes textReveal { to { opacity: 1; transform: translateY(0); } }
-
-        /* --- 2. HEADER & NAVIGATION --- */
+        /* --- 2. LAYOUT : SIDEBAR & NAV --- */
         nav {
-            position: fixed; top: 0; width: 100%; z-index: 1000;
-            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
-            background: linear-gradient(to bottom, #000, transparent);
-            backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            position: fixed; top: 0; width: 100%; height: 70px; background: rgba(0,0,0,0.95);
+            display: flex; align-items: center; padding: 0 2%; z-index: 1000; border-bottom: 1px solid var(--glass);
+        }
+        .search-bar {
+            flex-grow: 1; max-width: 600px; margin: 0 50px; position: relative;
+        }
+        .search-bar input {
+            width: 100%; background: #121212; border: 1px solid #333; padding: 10px 20px; border-radius: 20px; color: #fff;
         }
 
-        .logo { font-family: 'Bebas Neue'; font-size: 40px; color: var(--gold); cursor: pointer; }
-        .nav-items span { margin: 0 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.85rem; }
-        .nav-items span:hover { color: var(--gold); text-shadow: var(--shadow-gold); }
+        .sidebar {
+            position: fixed; left: 0; top: 70px; width: var(--sidebar-w); height: calc(100vh - 70px);
+            background: #000; padding: 20px; overflow-y: auto; border-right: 1px solid var(--glass);
+        }
+        .sidebar-item {
+            padding: 12px 15px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 15px; margin-bottom: 5px;
+        }
+        .sidebar-item:hover, .sidebar-item.active { background: var(--glass); color: var(--gold); }
+        .sidebar h3 { font-size: 0.8rem; color: #666; text-transform: uppercase; margin: 20px 0 10px; }
 
-        /* --- 3. SECTION À LA UNE --- */
-        .hero {
-            padding: 120px 5% 40px; max-width: 1400px; margin: auto;
+        /* --- 3. CONTENU PRINCIPAL --- */
+        main { margin-left: var(--sidebar-w); padding: 90px 4% 40px; }
+        
+        .hero-premium {
+            width: 100%; border-radius: 20px; overflow: hidden; border: 2px solid var(--gold);
+            margin-bottom: 40px; box-shadow: 0 0 30px rgba(255,215,0,0.1);
         }
 
-        .featured-video {
-            border-radius: 30px; overflow: hidden; border: 4px solid var(--glass);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative;
+        .video-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;
         }
-
-        .video-player { position: relative; padding-bottom: 56.25%; height: 0; }
-        .video-player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
-
-        /* --- 4. FILTRES ET GRILLE --- */
-        .category-bar { padding: 40px 5% 20px; display: flex; gap: 15px; overflow-x: auto; }
-        .filter-btn {
-            background: var(--glass); border: 1px solid rgba(255,255,255,0.2); color: #fff;
-            padding: 10px 25px; border-radius: 30px; cursor: pointer; white-space: nowrap;
-        }
-        .filter-btn:hover, .filter-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
-
-        .movie-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 40px; padding: 0 5% 100px;
-        }
-
         .movie-card {
-            background: var(--card-bg); border-radius: 20px; overflow: hidden;
-            border: 1px solid var(--glass); cursor: pointer;
+            background: #111; border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.3s;
         }
-        .movie-card:hover { transform: scale(1.05); box-shadow: var(--shadow-gold); border-color: var(--gold); }
-        .movie-card img { width: 100%; height: 200px; object-fit: cover; }
-        .card-info { padding: 20px; }
+        .movie-card:hover { transform: scale(1.05); box-shadow: 0 10px 20px #000; }
+        .movie-card img { width: 100%; height: 160px; object-fit: cover; }
+        .card-info { padding: 12px; }
 
-        /* --- 5. RIDEAU CINÉMA (PLAY ANIMATION) --- */
-        #cinema-mode {
-            position: fixed; inset: 0; background: #000; z-index: 200000;
-            display: none; flex-direction: column; justify-content: center; align-items: center;
+        /* --- 4. MODE CINÉMA --- */
+        #cinema-overlay {
+            position: fixed; inset: 0; background: #000; z-index: 10000; display: none;
+            flex-direction: column; justify-content: center; align-items: center;
         }
-
-        .spin-loader { font-size: 80px; animation: rotating 1.2s infinite linear; }
-        @keyframes rotating { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
     </style>
 </head>
 <body>
 
-    <div id="loading-screen">
-        <div class="pop-wrapper">🍿</div>
-        <div class="eye-container"></div>
-        <div class="brand-reveal">POPCORN STREAM</div>
+    <div id="intro-curtain">
+        <div class="curtain-panel panel-left" id="pl"></div>
+        <div class="curtain-panel panel-right" id="pr"></div>
+        <div class="mascot-anim" id="m-anim">
+            <span class="pop-spin">🍿</span>
+            <span class="eye-pop" id="m-eye">👁️</span>
+            <div class="logo-text" id="m-logo">POPCORN STREAM</div>
+        </div>
     </div>
 
-    <div id="cinema-mode">
-        <div id="curtain-loader">
-            <div class="spin-loader">🍿</div>
-            <h2 style="color: var(--gold); font-family: 'Bebas Neue'; letter-spacing: 3px;">OUVERTURE DU RIDEAU...</h2>
-        </div>
-        <div id="theater" style="display:none; width: 90%; max-width: 1200px; text-align: center;">
-            <div class="video-player" style="border: 2px solid var(--gold); border-radius: 15px; overflow: hidden;">
-                <iframe id="video-frame" src="" allowfullscreen></iframe>
-            </div>
-            <h1 style="color: var(--gold); font-family: 'Bebas Neue'; margin-top: 20px; font-size: 3rem;">BON VISIONNAGE !</h1>
-            <button onclick="closeTheater()" style="background:none; border: 1px solid #fff; color:#fff; padding: 10px 30px; cursor:pointer;">QUITTER LA SALLE</button>
+    <div id="cinema-overlay">
+        <div class="pop-spin" style="font-size: 100px;">🍿</div>
+        <h2 style="color:var(--gold); font-family:'Bebas Neue'; letter-spacing:4px;">PRÉPARATION DE TA SÉANCE...</h2>
+        <div id="player-container" style="display:none; width:80%;">
+            <iframe id="video-frame" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+            <h1 style="color:var(--gold); text-align:center;">🍿 BON VISIONNAGE !</h1>
+            <button onclick="closeCinema()" style="color:#fff; background:none; border:1px solid #fff; padding:10px 20px; cursor:pointer; margin:auto; display:block;">Quitter</button>
         </div>
     </div>
 
     <nav>
-        <div class="logo" onclick="location.reload()">POPCORN STREAM</div>
-        <div class="nav-items">
-            <span onclick="filter('all')">Accueil</span>
-            <span onclick="filter('jeux-video')">Jeux Vidéo</span>
-            <span onclick="filter('horreur')">Horreur</span>
-            <span onclick="filter('zone-neutre')">Zone Neutre</span>
+        <div class="logo-text" style="font-size: 25px; filter:none; opacity:1;">POPCORN STREAM</div>
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher un film, un youtubeur...">
         </div>
-        <button class="filter-btn" style="border:1px solid gold" onclick="toggleLight()">🔆 LUMINOSITÉ</button>
+        <button onclick="toggleLight()" style="background:none; border:1px solid #fff; color:#fff; cursor:pointer;">🔆 LUMINOSITÉ</button>
     </nav>
 
-    <header class="hero">
-        <h2 style="font-family: 'Bebas Neue'; color: var(--gold); letter-spacing: 2px;">À LA UNE</h2>
-        <div class="featured-video">
-            <div class="video-player">
-                <iframe src="https://www.youtube.com/embed/wrFsapf0Enk?autoplay=0&controls=1" allowfullscreen></iframe>
-            </div>
-        </div>
-    </header>
+    <div class="sidebar">
+        <h3>Menu</h3>
+        <div class="sidebar-item active" onclick="loadContent('all')">🏠 Accueil</div>
+        <div class="sidebar-item" onclick="loadContent('dramas')">🔥 Dramas</div>
+        <div class="sidebar-item">📑 Ma Liste</div>
+        
+        <h3>Catégories</h3>
+        <div class="sidebar-item" onclick="loadContent('jeux-video')">🎮 Jeux Vidéo</div>
+        <div class="sidebar-item" onclick="loadContent('horreur')">👻 Horreur</div>
+        <div class="sidebar-item" onclick="loadContent('zone-neutre')">🛡️ Zone Neutre</div>
+        <div class="sidebar-item" onclick="loadContent('science')">🧪 Science</div>
 
-    <div class="category-bar">
-        <button class="filter-btn active" onclick="filter('all', this)">TOUT</button>
-        <button class="filter-btn" onclick="filter('jeux-video', this)">JEUX VIDÉO</button>
-        <button class="filter-btn" onclick="filter('horreur', this)">HORREUR</button>
-        <button class="filter-btn" onclick="filter('zone-neutre', this)">ZONE NEUTRE</button>
-        <button class="filter-btn" onclick="filter('science', this)">SCIENCE</button>
+        <h3>Abonnements</h3>
+        <div class="sidebar-item" onclick="loadContent('Inoxtag')">🍋 Inoxtag</div>
+        <div class="sidebar-item" onclick="loadContent('Squeezie')">🎬 Squeezie</div>
+        <div class="sidebar-item" onclick="loadContent('Nozman')">🔬 Dr Nozman</div>
     </div>
 
-    <main class="movie-grid" id="main-grid">
-        </main>
+    <main>
+        <section class="hero-premium">
+            <iframe src="https://www.youtube.com/embed/wrFsapf0Enk?mute=1" width="100%" height="450" frameborder="0"></iframe>
+        </section>
+
+        <h2 id="section-title">À LA UNE</h2>
+        <div class="video-grid" id="main-grid">
+            </div>
+    </main>
 
     <script>
-        const MOVIES = [
-            { id: 'LpZ6S8-IUKw', title: 'Science du futur', cat: 'science', author: 'Dr Nozman' },
-            { id: 'v5E4_6XfM-A', title: 'La Nuit de l\'Horreur', cat: 'horreur', author: 'Squeezie' },
-            { id: '6VgKYd0JWq4', title: 'Kaizen : Le Trailer', cat: 'zone-neutre', author: 'Inoxtag' },
-            { id: 'Xj_XvW5WfWk', title: 'Elden Ring Masterclass', cat: 'jeux-video', author: 'GamerX' },
-            { id: 'p6v6lO2vE7E', title: 'Phasmo VR : Terreur', cat: 'horreur', author: 'Shadow' }
+        // --- DONNÉES ET SIMULATION GOOGLE CLOUD ---
+        const DATABASE = [
+            { id: 'LpZ6S8-IUKw', title: 'Les objets du futur', creator: 'Nozman', cat: 'science' },
+            { id: 'v5E4_6XfM-A', title: 'THREAD HORREUR', creator: 'Squeezie', cat: 'horreur' },
+            { id: 'Xj_XvW5WfWk', title: 'Elden Ring Combat', creator: 'Inoxtag', cat: 'jeux-video' },
+            { id: '6VgKYd0JWq4', title: 'Trailer Kaizen', creator: 'Inoxtag', cat: 'zone-neutre' }
         ];
 
-        // --- 1. INTRO DYNAMIQUE ---
-        setTimeout(() => {
-            document.getElementById('loading-screen').style.transform = "translateY(-100%)";
-            document.body.style.overflow = "auto";
-        }, 4500);
+        // --- 1. L'INTRO PRO ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const mAnim = document.getElementById('m-anim');
+            const mEye = document.getElementById('m-eye');
+            const mLogo = document.getElementById('m-logo');
 
-        // --- 2. LOGIQUE DES FILTRES ---
-        function filter(tag, btn) {
-            const grid = document.getElementById('main-grid');
-            const data = tag === 'all' ? MOVIES : MOVIES.filter(m => m.cat === tag);
+            // On attend un peu, puis on montre l'anim
+            setTimeout(() => { mAnim.style.opacity = "1"; }, 500);
             
-            if(btn) {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            }
+            // L'oeil sort
+            setTimeout(() => { 
+                mEye.style.opacity = "1"; 
+                mEye.style.transform = "scale(1)";
+                mEye.style.animation = "blinkEye 2s infinite";
+            }, 1800);
 
-            grid.innerHTML = data.map(m => `
-                <div class="movie-card" onclick="openTheater('${m.id}')">
-                    <img src="https://img.youtube.com/vi/${m.id}/maxresdefault.jpg">
+            // Le logo sort flou puis net
+            setTimeout(() => { 
+                mLogo.style.filter = "blur(0px)";
+                mLogo.style.opacity = "1";
+            }, 2500);
+
+            // Les rideaux s'ouvrent
+            setTimeout(() => {
+                document.getElementById('pl').style.transform = "scaleX(0)";
+                document.getElementById('pr').style.transform = "scaleX(0)";
+                mAnim.style.opacity = "0";
+            }, 4500);
+
+            setTimeout(() => {
+                document.getElementById('intro-curtain').style.display = "none";
+                document.body.style.overflow = "auto";
+            }, 5500);
+        });
+
+        // --- 2. LOGIQUE DE CONTENU ---
+        function loadContent(filter) {
+            const grid = document.getElementById('main-grid');
+            const title = document.getElementById('section-title');
+            title.innerText = filter.toUpperCase();
+
+            // Simulation Cache/Cloud
+            const data = filter === 'all' ? DATABASE : DATABASE.filter(v => v.cat === filter || v.creator === filter);
+            
+            grid.innerHTML = data.map(v => `
+                <div class="movie-card" onclick="openCinema('${v.id}')">
+                    <img src="https://img.youtube.com/vi/${v.id}/maxresdefault.jpg">
                     <div class="card-info">
-                        <h3 style="margin:0; color:var(--gold);">${m.title}</h3>
-                        <p style="margin:5px 0 0; font-size:0.8rem; opacity:0.7;">${m.author}</p>
+                        <h4>${v.title}</h4>
+                        <p style="color:#888;">${v.creator}</p>
                     </div>
                 </div>
             `).join('');
         }
 
-        // --- 3. CINÉMA (RIDEAU + BON VISIONNAGE) ---
-        function openTheater(id) {
-            const cinema = document.getElementById('cinema-mode');
-            const loader = document.getElementById('curtain-loader');
-            const theater = document.getElementById('theater');
-            const frame = document.getElementById('video-frame');
-
-            cinema.style.display = 'flex';
-            loader.style.display = 'block';
-            theater.style.display = 'none';
-
+        // --- 3. MODE CINÉMA ---
+        function openCinema(id) {
+            const overlay = document.getElementById('cinema-overlay');
+            overlay.style.display = "flex";
+            
             setTimeout(() => {
-                loader.style.display = 'none';
-                theater.style.display = 'block';
-                frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-            }, 2200);
+                document.querySelector('#cinema-overlay .pop-spin').style.display = "none";
+                document.querySelector('#cinema-overlay h2').style.display = "none";
+                document.getElementById('player-container').style.display = "block";
+                document.getElementById('video-frame').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+            }, 2500);
         }
 
-        function closeTheater() {
-            document.getElementById('cinema-mode').style.display = 'none';
+        function closeCinema() {
+            document.getElementById('cinema-overlay').style.display = "none";
             document.getElementById('video-frame').src = "";
         }
 
         function toggleLight() {
-            document.body.style.filter = document.body.style.filter === 'brightness(0.3)' ? 'brightness(1)' : 'brightness(0.3)';
+            document.body.style.filter = document.body.style.filter === 'brightness(0.2)' ? 'brightness(1)' : 'brightness(0.2)';
         }
 
-        window.onload = () => filter('all');
+        window.onload = () => loadContent('all');
     </script>
 </body>
 </html>
