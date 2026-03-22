@@ -31,9 +31,9 @@ jobs:
 
           CHAINES = {
               "documentaires":   "UCwI-JbGNsojunnHbFAc0M4Q",  # ARTE
-              "science":         "@DrNozman",  # Science Etonnante
+              "science":         "http://www.youtube.com/@DrNozman",  # Science Etonnante
               "espace":          "UC5X4e8ScZI2AFd_vkjSoyoQ",  # AstronoGeek
-              "bandesannonces":  "@SonyPicturesFr",  # FilmsActu
+              "bandesannonces":  "http://www.youtube.com/@SonyPicturesFr",  # FilmsActu
               "culture":         "UCqnbDFdCpuN8CMEg0VuEBqA",  # Nota Bene
           }
 
