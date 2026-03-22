@@ -5,10 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>POPCORN STREAM</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-<!-- ✅ LISTE DES VIDÉOS — modifie le fichier videos.js pour ajouter tes vidéos -->
-<script src="videos.js"></script>
-
 <style>
   :root {
     --bg:#080a0f; --surface:#0f1219; --surface2:#161c26;
@@ -22,13 +18,8 @@
     background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
     opacity:.35;
   }
-
-  /* ── INTRO ── */
-  #intro {
-    position:fixed; inset:0; z-index:9999; background:#000;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    animation:introFade .7s ease-in forwards 4.5s;
-  }
+  /* INTRO */
+  #intro { position:fixed; inset:0; z-index:9999; background:#000; display:flex; flex-direction:column; align-items:center; justify-content:center; animation:introFade .7s ease-in forwards 4.5s; }
   #intro::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at center,rgba(245,200,66,.1) 0%,transparent 70%); }
   .curtain { position:absolute; top:0; width:50%; height:100%; background:linear-gradient(to bottom,#0a0500,#1c0900,#0a0500); z-index:1; }
   .curtain.l { left:0; transform-origin:left; animation:cL 1.2s cubic-bezier(.77,0,.18,1) forwards .4s; }
@@ -49,8 +40,7 @@
   .intro-tag { position:absolute; bottom:80px; z-index:2; font-size:10px; letter-spacing:4px; color:var(--muted); text-transform:uppercase; opacity:0; animation:fadeUp .6s forwards 3.3s; }
   @keyframes fadeUp { to { opacity:1; } }
   @keyframes introFade { to { opacity:0; visibility:hidden; pointer-events:none; } }
-
-  /* ── SIDEBAR ── */
+  /* SIDEBAR */
   #sidebar { position:fixed; left:0; top:0; bottom:0; width:var(--sidebar); background:var(--surface); border-right:1px solid var(--border); z-index:100; display:flex; flex-direction:column; padding:26px 18px; }
   .logo { font-family:'Bebas Neue'; font-size:20px; letter-spacing:2px; color:var(--gold); margin-bottom:28px; line-height:1.1; }
   .logo sub { display:block; font-family:'DM Sans'; font-size:9px; letter-spacing:3px; color:var(--muted); font-weight:400; margin-top:2px; }
@@ -62,8 +52,7 @@
   .sidebar-foot { margin-top:auto; padding-top:14px; border-top:1px solid var(--border); }
   .theme-btn { width:100%; padding:7px 11px; border-radius:7px; background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-size:12px; cursor:pointer; font-family:'DM Sans'; transition:.2s; }
   .theme-btn:hover { color:var(--text); border-color:var(--gold); }
-
-  /* ── TOPBAR ── */
+  /* TOPBAR */
   #topbar { position:fixed; top:0; left:var(--sidebar); right:0; height:70px; background:linear-gradient(to bottom,var(--bg) 60%,transparent); z-index:50; display:flex; align-items:center; padding:0 32px; gap:16px; }
   .search-box { flex:1; max-width:380px; position:relative; }
   .search-box input { width:100%; background:var(--surface); border:1px solid var(--border); border-radius:9px; padding:8px 14px 8px 36px; color:var(--text); font-size:13px; font-family:'DM Sans'; outline:none; transition:.2s; }
@@ -71,14 +60,12 @@
   .search-box input::placeholder { color:var(--muted); }
   .search-box::before { content:'🔍'; position:absolute; left:11px; top:50%; transform:translateY(-50%); font-size:13px; pointer-events:none; }
   .topbar-badge { margin-left:auto; font-size:10px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
-
-  /* ── MAIN ── */
+  /* MAIN */
   #main { position:fixed; left:var(--sidebar); top:0; right:0; bottom:0; overflow-y:auto; padding:86px 32px 40px; scrollbar-width:thin; scrollbar-color:var(--surface2) transparent; }
   .sec-head { display:flex; align-items:baseline; gap:12px; margin-bottom:22px; }
   .sec-title { font-family:'Bebas Neue'; font-size:28px; letter-spacing:2px; }
   .sec-count { font-size:10px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
-
-  /* ── HERO ── */
+  /* HERO */
   .hero { position:relative; border-radius:14px; overflow:hidden; aspect-ratio:21/8; cursor:pointer; margin-bottom:32px; }
   .hero img { width:100%; height:100%; object-fit:cover; transition:transform .5s; filter:brightness(.65); display:block; }
   .hero:hover img { transform:scale(1.03); filter:brightness(.8); }
@@ -88,8 +75,7 @@
   .hero-title { font-family:'Bebas Neue'; font-size:34px; letter-spacing:2px; line-height:1.05; margin-bottom:14px; text-shadow:0 2px 16px rgba(0,0,0,.7); }
   .hero-play { display:inline-flex; align-items:center; gap:7px; background:var(--gold); color:#000; font-size:13px; font-weight:700; padding:9px 20px; border-radius:7px; border:none; cursor:pointer; transition:.2s; font-family:'DM Sans'; }
   .hero-play:hover { background:#fff; transform:scale(1.03); }
-
-  /* ── GRILLE ── */
+  /* GRILLE */
   .vgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px; }
   .vcard { border-radius:10px; overflow:hidden; cursor:pointer; background:var(--surface); transition:transform .25s,box-shadow .25s; }
   .vcard:hover { transform:translateY(-5px); box-shadow:0 14px 36px rgba(0,0,0,.5); }
@@ -104,12 +90,9 @@
   .vbody { padding:11px 13px 13px; }
   .vtitle { font-size:12px; font-weight:500; line-height:1.45; color:var(--text); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:5px; }
   .vmeta { font-size:10px; color:var(--muted); }
-
-  /* ── VIDE ── */
-  .empty-box { grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--muted); font-size:13px; line-height:2; }
-  .empty-box span { font-size:36px; display:block; margin-bottom:12px; }
-
-  /* ── MODAL ── */
+  .empty-box { grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--muted); font-size:13px; line-height:2.2; }
+  .empty-box .empty-ico { font-size:36px; display:block; margin-bottom:12px; }
+  /* MODAL */
   #modal { position:fixed; inset:0; z-index:3000; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.92); backdrop-filter:blur(12px); }
   #modal.open { display:flex; animation:mIn .25s ease; }
   @keyframes mIn { from { opacity:0; } }
@@ -121,17 +104,13 @@
   .modal-x:hover { background:var(--red); color:#fff; border-color:var(--red); }
   .player-box { aspect-ratio:16/9; border-radius:10px; overflow:hidden; box-shadow:0 28px 70px rgba(0,0,0,.8),0 0 0 1px var(--border); }
   .player-box iframe { width:100%; height:100%; display:block; border:none; }
-
-  /* ── LIGHT MODE ── */
   body.light { --bg:#f0f2f5; --surface:#fff; --surface2:#e8eaed; --text:#1a1c20; --muted:#6b7280; --border:rgba(0,0,0,.08); }
 </style>
 </head>
 <body>
 
-<!-- INTRO -->
 <div id="intro">
-  <div class="curtain l"></div>
-  <div class="curtain r"></div>
+  <div class="curtain l"></div><div class="curtain r"></div>
   <div class="intro-logo">
     <div class="intro-pop">🍿<div class="intro-eye">👁️</div></div>
     <div class="intro-text"><span class="big">Popcorn</span><span class="small">Stream</span></div>
@@ -139,38 +118,21 @@
   <p class="intro-tag">Plateforme éducative · Contenu sélectionné</p>
 </div>
 
-<!-- SIDEBAR -->
 <aside id="sidebar">
   <div class="logo">🍿 POPCORN STREAM<sub>ÉDITION ÉCOLE</sub></div>
-
   <div class="nav-label">Accueil</div>
-  <button class="nav-btn active" onclick="go(this,'alune')">
-    <span class="ico">🔥</span> À la une
-  </button>
-
+  <button class="nav-btn active" onclick="go(this,'alune')"><span class="ico">🔥</span> À la une</button>
   <div class="nav-label">Catégories</div>
-  <button class="nav-btn" onclick="go(this,'documentaires')">
-    <span class="ico">🌍</span> Documentaires
-  </button>
-  <button class="nav-btn" onclick="go(this,'science')">
-    <span class="ico">🔬</span> Science & Nature
-  </button>
-  <button class="nav-btn" onclick="go(this,'espace')">
-    <span class="ico">🚀</span> Espace & Univers
-  </button>
-  <button class="nav-btn" onclick="go(this,'bandesannonces')">
-    <span class="ico">🎬</span> Bandes-Annonces
-  </button>
-  <button class="nav-btn" onclick="go(this,'culture')">
-    <span class="ico">🎓</span> Culture Générale
-  </button>
-
+  <button class="nav-btn" onclick="go(this,'documentaires')"><span class="ico">🌍</span> Documentaires</button>
+  <button class="nav-btn" onclick="go(this,'science')"><span class="ico">🔬</span> Science & Nature</button>
+  <button class="nav-btn" onclick="go(this,'espace')"><span class="ico">🚀</span> Espace & Univers</button>
+  <button class="nav-btn" onclick="go(this,'bandesannonces')"><span class="ico">🎬</span> Bandes-Annonces</button>
+  <button class="nav-btn" onclick="go(this,'culture')"><span class="ico">🎓</span> Culture Générale</button>
   <div class="sidebar-foot">
     <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">☀️ Mode Clair</button>
   </div>
 </aside>
 
-<!-- TOPBAR -->
 <header id="topbar">
   <div class="search-box">
     <input type="text" id="search" placeholder="Rechercher une vidéo..." oninput="filterCards(this.value)">
@@ -178,7 +140,6 @@
   <div class="topbar-badge">✦ Contenu éducatif sécurisé</div>
 </header>
 
-<!-- MAIN -->
 <main id="main">
   <div class="sec-head">
     <h2 class="sec-title" id="sec-title">À LA UNE</h2>
@@ -188,7 +149,6 @@
   <div class="vgrid" id="grid"></div>
 </main>
 
-<!-- PLAYER -->
 <div id="modal">
   <div class="modal-box">
     <div class="modal-hd">
@@ -202,17 +162,89 @@
 </div>
 
 <script>
-// Noms affichés pour chaque catégorie
-const LABELS = {
-  alune:          '🔥 À la une',
-  documentaires:  '🌍 Documentaires',
-  science:        '🔬 Science & Nature',
-  espace:         '🚀 Espace & Univers',
-  bandesannonces: '🎬 Bandes-Annonces',
-  culture:        '🎓 Culture Générale',
+// =====================================================================
+//   🍿 LISTE DES VIDÉOS — MODIFIE ICI POUR AJOUTER TES VIDÉOS
+// =====================================================================
+//
+//  COMMENT TROUVER L'ID D'UNE VIDÉO YOUTUBE ?
+//  Ouvre la vidéo, regarde l'URL :
+//  https://www.youtube.com/watch?v=  XXXXXXXXXXX
+//                                    ^^^^^^^^^^^
+//                                    C'est l'ID !
+//
+//  FORMAT À RESPECTER :
+//  { id:"XXXXXXXXXXX", titre:"Mon titre", date:"Mars 2025" },
+//
+// =====================================================================
+
+const VIDEOS = {
+
+  // ─────────────────────────────────────────────────
+  // 🔥 À LA UNE
+  // La 1ère vidéo s'affiche en grand (bannière hero)
+  // ─────────────────────────────────────────────────
+  alune: [
+    { id:"O-2u2CscyU0", titre:"KAIZEN — 1 an pour gravir l'Everest", date:"2024" },
+    { id:"p0Z-9Q_jM2Y", titre:"Inoxtag : Nouveau Départ", date:"2024" },
+    { id:"PCMrUGqH6fQ", titre:"La face cachée des océans", date:"2024" },
+    { id:"7Xfk9CN6S4E", titre:"L'univers en 1 heure", date:"2024" },
+    // ← AJOUTE TES VIDÉOS "À LA UNE" ICI ↑
+  ],
+
+  // ─────────────────────────────────────────────────
+  // 🌍 DOCUMENTAIRES
+  // ─────────────────────────────────────────────────
+  documentaires: [
+    { id:"PCMrUGqH6fQ", titre:"La face cachée des océans", date:"Fév 2025" },
+    { id:"7Xfk9CN6S4E", titre:"L'univers en 1 heure — Documentaire complet", date:"Jan 2025" },
+    { id:"mOpQ-pFbpE8", titre:"NASA : Les mystères de Mars", date:"Mar 2025" },
+    // ← AJOUTE TES DOCUMENTAIRES ICI ↑
+  ],
+
+  // ─────────────────────────────────────────────────
+  // 🔬 SCIENCE & NATURE
+  // ─────────────────────────────────────────────────
+  science: [
+    { id:"7Xfk9CN6S4E", titre:"L'univers en 1 heure", date:"2024" },
+    // ← AJOUTE TES VIDÉOS SCIENCE ICI ↑
+  ],
+
+  // ─────────────────────────────────────────────────
+  // 🚀 ESPACE & UNIVERS
+  // ─────────────────────────────────────────────────
+  espace: [
+    { id:"mOpQ-pFbpE8", titre:"NASA : Les mystères de Mars", date:"2024" },
+    // ← AJOUTE TES VIDÉOS ESPACE ICI ↑
+  ],
+
+  // ─────────────────────────────────────────────────
+  // 🎬 BANDES-ANNONCES
+  // ─────────────────────────────────────────────────
+  bandesannonces: [
+    { id:"sSB_PxmAb2s", titre:"Exemple bande-annonce", date:"2025" },
+    // ← COLLE ICI LES IDs DE TES BANDES-ANNONCES ↑
+  ],
+
+  // ─────────────────────────────────────────────────
+  // 🎓 CULTURE GÉNÉRALE
+  // ─────────────────────────────────────────────────
+  culture: [
+    { id:"O-2u2CscyU0", titre:"KAIZEN — 1 an pour gravir l'Everest", date:"2024" },
+    // ← AJOUTE TES VIDÉOS CULTURE ICI ↑
+  ],
+
 };
 
-// Navigation
+// =====================================================================
+//   ⬇️ NE TOUCHE PAS AU CODE EN DESSOUS — TOUT EST AUTOMATIQUE
+// =====================================================================
+
+const LABELS = {
+  alune:'À la une', documentaires:'Documentaires',
+  science:'Science & Nature', espace:'Espace & Univers',
+  bandesannonces:'Bandes-Annonces', culture:'Culture Générale',
+};
+
 function go(btn, cat) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -221,39 +253,37 @@ function go(btn, cat) {
 
 function renderCat(cat) {
   const list = VIDEOS[cat] || [];
-  const label = LABELS[cat] || cat;
-
-  document.getElementById('sec-title').textContent = label.replace(/^../,'').trim().toUpperCase();
+  document.getElementById('sec-title').textContent = (LABELS[cat] || cat).toUpperCase();
   document.getElementById('hero-zone').innerHTML = '';
 
-  if (list.length === 0) {
+  if (!list.length) {
     document.getElementById('sec-count').textContent = '';
     document.getElementById('grid').innerHTML = `
       <div class="empty-box">
-        <span>🎬</span>
-        Aucune vidéo dans cette catégorie pour l'instant.<br>
-        <small>Ouvre le fichier <strong>videos.js</strong> et ajoute des vidéos !</small>
+        <span class="empty-ico">🎬</span>
+        Aucune vidéo dans cette catégorie.<br>
+        <small>Ouvre <strong>index.html</strong>, trouve la section <strong>${cat}</strong> et ajoute des vidéos !</small>
       </div>`;
     return;
   }
 
   document.getElementById('sec-count').textContent = list.length + ' vidéo' + (list.length > 1 ? 's' : '');
 
-  // Premier = hero
-  const first = list[0];
+  // Hero = première vidéo
+  const f = list[0];
   document.getElementById('hero-zone').innerHTML = `
-    <div class="hero" onclick="openPlayer('${first.id}','${esc(first.titre)}')">
-      <img src="https://img.youtube.com/vi/${first.id}/maxresdefault.jpg"
-           onerror="this.src='https://img.youtube.com/vi/${first.id}/hqdefault.jpg'" alt="">
+    <div class="hero" onclick="openPlayer('${f.id}','${esc(f.titre)}')">
+      <img src="https://img.youtube.com/vi/${f.id}/maxresdefault.jpg"
+           onerror="this.src='https://img.youtube.com/vi/${f.id}/hqdefault.jpg'" alt="">
       <div class="hero-grad"></div>
       <div class="hero-info">
         <span class="hero-badge">✦ À LA UNE</span>
-        <div class="hero-title">${first.titre}</div>
+        <div class="hero-title">${f.titre}</div>
         <button class="hero-play">▶ &nbsp;Regarder</button>
       </div>
     </div>`;
 
-  // Reste = grille
+  // Grille = reste
   document.getElementById('grid').innerHTML = list.slice(1).map(v => `
     <div class="vcard" onclick="openPlayer('${v.id}','${esc(v.titre)}')">
       <div class="thumb-box">
@@ -271,7 +301,6 @@ function renderCat(cat) {
 
 function esc(s) { return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
 
-// Player
 function openPlayer(id, title) {
   document.getElementById('player').src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
   document.getElementById('modal-ttl').textContent = title;
@@ -284,22 +313,19 @@ function closePlayer() {
 document.getElementById('modal').addEventListener('click', e => { if(e.target.id==='modal') closePlayer(); });
 document.addEventListener('keydown', e => { if(e.key==='Escape') closePlayer(); });
 
-// Recherche
 function filterCards(q) {
   const ql = q.toLowerCase();
   document.querySelectorAll('.vcard').forEach(c => {
-    c.style.display = c.querySelector('.vtitle').textContent.toLowerCase().includes(ql) ? '' : 'none';
+    c.style.display = c.querySelector('.vtitle').textContent.toLowerCase().includes(ql) ? '':'none';
   });
 }
 
-// Thème
 function toggleTheme() {
   document.body.classList.toggle('light');
   document.getElementById('theme-btn').textContent =
     document.body.classList.contains('light') ? '🌙 Mode Sombre' : '☀️ Mode Clair';
 }
 
-// Init
 setTimeout(() => renderCat('alune'), 5000);
 </script>
 </body>
