@@ -1,96 +1,84 @@
-import React, { useState } from 'react';
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonEmpireAuto - IA Business</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #000; color: white; }
+        .gradient-text { background: linear-gradient(to right, #3b82f6, #22c55e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-4xl mx-auto flex flex-col items-center">
+        <h1 class="text-5xl font-black mt-10 gradient-text text-center">MonEmpireAuto</h1>
+        <p class="text-gray-400 mt-4 text-center">Génère ton business rentable en 60 secondes.</p>
 
-export default function MonEmpireAuto() {
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
-
-  const genererBusiness = async () => {
-    if (!input) return;
-    setLoading(true);
-    
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: input }),
-      });
-      const data = await response.json();
-      setResult(JSON.parse(data.text)); // On attend du JSON de l'IA
-    } catch (error) {
-      console.error("Erreur:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-black text-white font-sans p-6 flex flex-col items-center">
-      {/* Header */}
-      <header className="text-center mt-10 mb-12">
-        <h1 className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-blue-500 to-green-400 bg-clip-text text-transparent">
-          MonEmpireAuto
-        </h1>
-        <p className="text-gray-400 mt-4 text-lg">L'IA qui construit ton business rentable en 60 secondes.</p>
-      </header>
-
-      {/* Input Section */}
-      <div className="w-full max-w-2xl bg-gray-900 p-1 rounded-2xl border border-gray-800 shadow-2xl">
-        <div className="flex p-2 gap-2">
-          <input 
-            className="flex-1 bg-transparent p-4 outline-none text-lg"
-            placeholder="Ex: J'ai 0€ et 2h par jour, que faire ?"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <button 
-            onClick={genererBusiness}
-            disabled={loading}
-            className="bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded-xl font-bold transition-all disabled:opacity-50"
-          >
-            {loading ? "Calcul du profit..." : "Générer mon plan"}
-          </button>
+        <div class="w-full max-w-2xl bg-gray-900 p-2 rounded-2xl border border-gray-800 mt-10 flex shadow-2xl">
+            <input id="user-input" class="bg-transparent flex-1 p-4 outline-none" placeholder="Ex: J'ai 100€ et je veux gagner 2000€/mois...">
+            <button onclick="generer()" id="btn" class="bg-blue-600 px-6 py-4 rounded-xl font-bold hover:bg-blue-500 transition-all">Lancer</button>
         </div>
-      </div>
 
-      {/* Result Section (Dashboard) */}
-      {result && (
-        <div className="w-full max-w-4xl mt-12 animate-fade-in">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gray-900 border border-green-500/30 p-6 rounded-2xl shadow-lg">
-              <p className="text-gray-400 text-sm uppercase font-semibold">Estimation Gain</p>
-              <p className="text-3xl font-black text-green-400">+{result.estimation_gain}</p>
-            </div>
-            <div className="bg-gray-900 border border-blue-500/30 p-6 rounded-2xl shadow-lg">
-              <p className="text-gray-400 text-sm uppercase font-semibold">Difficulté</p>
-              <p className="text-3xl font-black text-blue-400">{result.difficulte}/10</p>
-            </div>
-            <div className="bg-gray-900 border border-purple-500/30 p-6 rounded-2xl shadow-lg">
-              <p className="text-gray-400 text-sm uppercase font-semibold">Travail Requis</p>
-              <p className="text-3xl font-black text-purple-400">{result.temps_requis}</p>
-            </div>
-          </div>
+        <div id="loading" class="hidden mt-10 text-blue-400 animate-pulse">L'IA calcule tes futurs profits...</div>
 
-          <div className="bg-gray-900 border border-gray-800 p-8 rounded-3xl">
-            <h2 className="text-2xl font-bold mb-6 text-blue-500">🚀 Plan d'action : {result.business_nom}</h2>
-            <ul className="space-y-4">
-              {result.plan_action.map((etape, i) => (
-                <li key={i} className="flex items-start gap-4 text-gray-300 text-lg">
-                  <span className="bg-blue-600 text-white w-7 h-7 flex items-center justify-center rounded-full text-sm font-bold mt-1">{i+1}</span>
-                  {etape}
-                </li>
-              ))}
-            </ul>
-            
-            <div className="mt-10 p-6 bg-blue-600/10 border border-blue-600/30 rounded-2xl text-center">
-              <p className="mb-4 font-semibold">Outil recommandé pour ce business :</p>
-              <a href={result.lien_outil_recommande} className="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform">
-                Lancer avec cet outil (Gratuit)
-              </a>
+        <div id="resultat" class="hidden w-full mt-10 space-y-6">
+            <div class="grid grid-cols-3 gap-4">
+                <div class="bg-gray-900 border border-green-500/30 p-4 rounded-xl text-center">
+                    <p class="text-xs text-gray-400">GAIN ESTIMÉ</p>
+                    <p id="gain" class="text-xl font-bold text-green-400"></p>
+                </div>
+                <div class="bg-gray-900 border border-blue-500/30 p-4 rounded-xl text-center">
+                    <p class="text-xs text-gray-400">DIFFICULTÉ</p>
+                    <p id="diff" class="text-xl font-bold text-blue-400"></p>
+                </div>
+                <div class="bg-gray-900 border border-purple-500/30 p-4 rounded-xl text-center">
+                    <p class="text-xs text-gray-400">TRAVAIL / J</p>
+                    <p id="temps" class="text-xl font-bold text-purple-400"></p>
+                </div>
             </div>
-          </div>
+            <div class="bg-gray-900 p-8 rounded-3xl border border-gray-800">
+                <h2 id="titre-biz" class="text-2xl font-bold text-blue-500 mb-4"></h2>
+                <div id="plan" class="space-y-3 text-gray-300"></div>
+                <div class="mt-8 text-center">
+                    <a href="https://systeme.io?sa=tonid" class="bg-blue-600 px-8 py-3 rounded-full font-bold">Lancer ce business (Gratuit)</a>
+                </div>
+            </div>
         </div>
-      )}
     </div>
-  );
-}
+
+    <script>
+        async function generer() {
+            const input = document.getElementById('user-input').value;
+            const key = "TA_CLE_GROQ_ICI"; // ⚠️ METS TA CLÉ ICI POUR TESTER
+            if(!input) return;
+
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('btn').disabled = true;
+
+            try {
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${key}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        model: "llama3-8b-8192",
+                        messages: [{ role: "system", content: "Réponds UNIQUEMENT en JSON: {\"nom\":\"\",\"gain\":\"\",\"diff\":\"\",\"temps\":\"\",\"plan\":[\"\",\"\",\"\"]}" }, { role: "user", content: input }],
+                        response_format: { type: "json_object" }
+                    })
+                });
+                const data = await response.json();
+                const res = JSON.parse(data.choices[0].message.content);
+
+                document.getElementById('titre-biz').innerText = res.nom;
+                document.getElementById('gain').innerText = res.gain;
+                document.getElementById('diff').innerText = res.diff + "/10";
+                document.getElementById('temps').innerText = res.temps;
+                document.getElementById('plan').innerHTML = res.plan.map(e => `• ${e}<br>`).join('');
+                document.getElementById('resultat').classList.remove('hidden');
+            } catch (e) { alert("Erreur de connexion à l'IA"); }
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('btn').disabled = false;
+        }
+    </script>
+</body>
+</html>
