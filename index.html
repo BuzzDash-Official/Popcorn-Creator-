@@ -14,33 +14,50 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow: hidden; height: 100vh; }
   
-  /* AMBIANCE VIOLETTE */
   body::before {
     content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background: radial-gradient(circle at 30% 30%, var(--violet) 0%, transparent 60%);
   }
 
-  /* INTRO ET TRANSITION "TOUDOUM" */
-  #intro, #transition {
+  /* --- TON INTRO D'ORIGINE (RIDEAUX + OEIL) --- */
+  #intro {
     position: fixed; inset: 0; z-index: 9999; background: #000;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
+    animation: introFade 0.8s ease-in forwards 4.8s;
   }
-  #intro { animation: introFade 0.8s ease-in forwards 4.8s; }
-  #transition { display: none; z-index: 4000; } /* Pour le clic vidéo */
-
   .curtain-l,.curtain-r { position:absolute; top:0; width:50%; height:100%; background:#0a0500; z-index:1; }
   .curtain-l { left:0; transform-origin:left; animation:cL 1.4s forwards .4s; }
   .curtain-r { right:0; transform-origin:right; animation:cR 1.4s forwards .4s; }
   
-  .logo-anim { position:relative; z-index:2; font-size:100px; animation: pulseLogo 1s infinite alternate; }
-  .eye-anim { position:absolute; font-size:35px; top:50%; left:50%; transform:translate(-50%,-50%); animation: eyeBlink .3s infinite 3s; }
+  .logo-box { position:relative; z-index:2; font-size:100px; }
+  .eye-blink { position:absolute; font-size:35px; top:50%; left:50%; transform:translate(-50%,-50%); animation: eyeBlink .3s infinite 3s; }
 
-  @keyframes pulseLogo { from { transform: scale(1); filter: drop-shadow(0 0 10px var(--gold)); } to { transform: scale(1.1); filter: drop-shadow(0 0 30px var(--gold)); } }
   @keyframes cL { to { transform:scaleX(0); } } @keyframes cR { to { transform:scaleX(0); } }
   @keyframes eyeBlink { 0%,85%,100% { transform:translate(-50%,-50%) scaleY(1); } 92% { transform:translate(-50%,-50%) scaleY(.1); } }
   @keyframes introFade { to { opacity:0; visibility:hidden; } }
 
-  /* NAVIGATION ET GRILLE */
+  /* --- NOUVELLE TRANSITION "POPCORN TOURNE ET AVANCE" --- */
+  #transition-load {
+    position: fixed; inset: 0; z-index: 8000; background: #000;
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .pop-zoom-spin {
+    font-size: 50px;
+    animation: zoomSpin 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  .eye-final {
+    position: absolute; font-size: 30px; opacity: 0;
+    animation: eyeAppear 0.3s forwards 1.5s, eyeBlink .3s infinite 2s;
+  }
+
+  @keyframes zoomSpin {
+    0% { transform: rotate(0deg) scale(1); }
+    70% { transform: rotate(1080deg) scale(4); }
+    100% { transform: rotate(1080deg) scale(2.5); }
+  }
+  @keyframes eyeAppear { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+
+  /* --- INTERFACE --- */
   #sidebar { position:fixed; left:0; top:0; bottom:0; width:var(--sidebar); background:var(--surface); border-right:1px solid var(--border); z-index:100; padding:25px; }
   .nav-btn { background:none; border:none; color:var(--muted); width:100%; text-align:left; padding:12px; font-weight:700; cursor:pointer; border-radius:8px; margin-bottom:5px; transition: 0.3s; }
   .nav-btn:hover, .nav-btn.active { background:rgba(245,200,66,0.1); color:var(--gold); }
@@ -49,30 +66,29 @@
   .vgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:25px; }
   .vcard { background:var(--surface); border-radius:12px; overflow:hidden; border:1px solid var(--border); cursor:pointer; transition:0.3s; }
   .vcard:hover { transform:translateY(-8px); border-color:var(--gold); }
-  .thumb-box { position:relative; aspect-ratio:16/9; }
-  .vthumb { width:100%; height:100%; object-fit:cover; }
-
-  /* MODAL PLAYER STYLE NETFLIX */
-  #modal { position:fixed; inset:0; background:#000; z-index:5000; display:none; flex-direction: column; align-items:center; justify-content:center; }
+  
+  /* PLAYER MODAL */
+  #modal { position:fixed; inset:0; background:#000; z-index:9000; display:none; flex-direction: column; align-items:center; justify-content:center; }
   #modal.open { display:flex; }
-  .player-container { width:90%; max-width:1100px; position: relative; }
-  .player-box { width:100%; aspect-ratio:16/9; border:1px solid #333; box-shadow: 0 0 50px rgba(0,0,0,1); }
-  .player-info { margin-top: 20px; text-align: center; width: 100%; }
-  .enjoy-text { font-family: 'Bebas Neue'; font-size: 30px; color: var(--gold); letter-spacing: 2px; margin-bottom: 5px; }
-  .yt-credit { font-size: 12px; color: var(--muted); opacity: 0.7; }
-  .close-btn { position: absolute; top: -50px; right: 0; color: #fff; background: none; border: 1px solid #fff; padding: 5px 15px; cursor: pointer; border-radius: 20px; }
+  .player-box { width:90%; max-width:1100px; aspect-ratio:16/9; position: relative; border: 1px solid #222; }
+  .player-footer { margin-top: 20px; text-align: center; }
+  .msg-vision { font-family: 'Bebas Neue'; font-size: 28px; color: var(--gold); letter-spacing: 2px; }
+  .close-x { position: absolute; top: -50px; right: 0; color: #777; cursor: pointer; background: none; border: 1px solid #333; padding: 5px 15px; border-radius: 20px; }
 </style>
 </head>
 <body>
 
-<div id="transition">
-    <div class="logo-anim">🍿<div class="eye-anim">👁️</div></div>
-    <p style="font-family:'Bebas Neue'; color:var(--gold); margin-top:20px; font-size:24px; letter-spacing:4px;">PRÉPARATION...</p>
+<div id="transition-load">
+    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+        <div class="pop-zoom-spin">🍿</div>
+        <div class="eye-final">👁️</div>
+    </div>
+    <p id="vision-text" style="font-family:'Bebas Neue'; color:var(--gold); margin-top:120px; font-size:24px; opacity:0;">BON VISIONNAGE</p>
 </div>
 
 <div id="intro">
   <div class="curtain-l"></div><div class="curtain-r"></div>
-  <div class="logo-anim">🍿<div class="eye-anim">👁️</div></div>
+  <div class="logo-box">🍿<div class="eye-blink">👁️</div></div>
   <h1 style="font-family:'Bebas Neue'; font-size:60px; color:var(--gold); margin-top:20px;">POPCORN STREAM</h1>
 </div>
 
@@ -91,14 +107,12 @@
 </main>
 
 <div id="modal">
-  <div class="player-container">
-    <button class="close-btn" onclick="closePlayer()">FERMER ✕</button>
-    <div class="player-box">
-        <iframe id="player" width="100%" height="100%" src="" frameborder="0" allowfullscreen allow="autoplay"></iframe>
-    </div>
-    <div class="player-info">
-        <div class="enjoy-text">BON VISIONNAGE</div>
-        <div class="yt-credit">Cette vidéo est diffusée via YouTube • Droits réservés à l'auteur original</div>
+  <div class="player-box">
+    <button class="close-x" onclick="closePlayer()">FERMER ✕</button>
+    <iframe id="player" width="100%" height="100%" src="" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+    <div class="player-footer">
+        <div class="msg-vision">BON VISIONNAGE</div>
+        <div style="font-size:11px; color:#555; margin-top:5px;">Hébergé par YouTube • Contenu de l'auteur original</div>
     </div>
   </div>
 </div>
@@ -107,8 +121,8 @@
 const API_KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs';
 
 const CONFIG = {
-  science: { id: 'UCaNlbnghtwlsGF-KzAFThqA', label: 'Dr Nozman', icon: '🔬' },
-  trailers: { id: 'UC_i8X3p8oZNaik8X513Zn1Q', label: 'Bandes-Annonces', icon: '🎬' },
+  science: { id: 'UCaNlbnghtwlsGF-KzAFThqA', label: 'Dr Nozman', icon: '🔬' }, // ID Corrigé
+  trailers: { id: 'UC_i8X3p8oZNaik8X513Zn1Q', label: 'FilmsActu', icon: '🎬' },
   docs: { id: 'UCwI-JbGNsojunnHbFAc0M4Q', label: 'Documentaires ARTE', icon: '🌍' }
 };
 
@@ -117,17 +131,22 @@ const ALUNE = [
   { id:"p0Z-9Q_jM2Y", title:"Inoxtag — Nouveau Départ" }
 ];
 
-// --- SYSTÈME DE TRANSITION NETFLIX STYLE ---
+// --- TRANSITION "TOUDOUM" PERSONNALISÉE ---
 function openPlayer(id) {
-    const trans = document.getElementById('transition');
-    trans.style.display = 'flex'; // Affiche le logo anim
+    const loader = document.getElementById('transition-load');
+    const vText = document.getElementById('vision-text');
+    loader.style.display = 'flex';
     
-    // On attend 1.5 seconde (le temps du "Toudoum") avant d'ouvrir la vidéo
+    // Animation du texte "Bon Visionnage"
+    setTimeout(() => { vText.style.opacity = '1'; }, 1500);
+
+    // Chargement de la vidéo après l'animation
     setTimeout(() => {
-        document.getElementById('player').src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
+        document.getElementById('player').src = `https://www.youtube.com/embed/${id}?autoplay=1&modestbranding=1`;
         document.getElementById('modal').classList.add('open');
-        trans.style.display = 'none'; // On cache la transition
-    }, 1500);
+        loader.style.display = 'none';
+        vText.style.opacity = '0';
+    }, 3000); // Durée totale 3s
 }
 
 function closePlayer() {
@@ -135,7 +154,7 @@ function closePlayer() {
     document.getElementById('modal').classList.remove('open');
 }
 
-// --- LOGIQUE DE CHARGEMENT ---
+// --- LOGIQUE YOUTUBE ---
 async function updateVideos(category) {
     const today = new Date().toDateString();
     const storageKey = `pop_vids_${category}`;
@@ -177,7 +196,7 @@ function renderHero(id, title, icon='🔥') {
     <div style="position:relative; border-radius:15px; overflow:hidden; aspect-ratio:21/9; cursor:pointer; margin-bottom:40px;" onclick="openPlayer('${id}')">
       <img src="https://img.youtube.com/vi/${id}/maxresdefault.jpg" style="width:100%; height:100%; object-fit:cover; filter:brightness(0.5);">
       <div style="position:absolute; bottom:30px; left:30px;">
-        <span style="background:var(--gold); color:black; padding:5px 12px; border-radius:5px; font-weight:bold; font-size:12px;">${icon} DERNIÈRE SORTIE</span>
+        <span style="background:var(--gold); color:black; padding:5px 12px; border-radius:5px; font-weight:bold; font-size:12px;">${icon} RÉCENT</span>
         <h3 style="font-family:'Bebas Neue'; font-size:45px; margin-top:10px;">${title}</h3>
       </div>
     </div>`;
@@ -190,7 +209,7 @@ function displayManual() {
   grid.innerHTML = "";
   renderHero(ALUNE[0].id, ALUNE[0].title);
   ALUNE.slice(1).forEach(v => {
-    grid.innerHTML += `<div class="vcard" onclick="openPlayer('${v.id}')"><div class="thumb-box"><img class="vthumb" src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg"></div><div style="padding:15px; font-weight:700; font-size:13px;">${v.title}</div></div>`;
+    grid.innerHTML += `<div class="vcard" onclick="openPlayer('${v.id}')"><div class="thumb-box"><img class="vthumb" src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg"></div><div style="padding:15px; font-weight:700; font-size:13px;">${v.snippet ? v.snippet.title : v.title}</div></div>`;
   });
 }
 
