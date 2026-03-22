@@ -1,174 +1,314 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FLUX DE POP-CORN — PREMIUM</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #050608; --surface: #0f1219; --gold: #f5c842; --text: #eaeaea;
-    --muted: #7a8499; --border: rgba(255,255,255,0.06); --sidebar: 260px;
-    --accent: rgba(139, 92, 246, 0.15);
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow: hidden; height: 100vh; }
-  
-  /* L'EFFET DE LUMIÈRE D'AMBIANCE */
-  body::before {
-    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background: radial-gradient(circle at 20% 20%, var(--accent) 0%, transparent 50%);
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamVibe - Plateforme Officielle</title>
+    <style>
+        /* VARIABLES DE COULEURS */
+        :root {
+            --primary: #e50914; /* Rouge style Netflix/Stream */
+            --bg-dark: #0f0f0f;
+            --bg-card: #1f1f1f;
+            --text-main: #ffffff;
+            --text-dim: #aaaaaa;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-  /* --- INTRO MASCOTTE ORIGINALE --- */
-  #intro {
-    position: fixed; inset: 0; z-index: 9999; background: #000;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    animation: introFade 0.8s ease-in forwards 5s;
-  }
-  .mascot-box { position: relative; font-size: 110px; margin-bottom: 20px; }
-  .eye-blink { position: absolute; font-size: 38px; top: 55%; left: 50%; transform: translate(-50%, -50%); animation: eyeBlink 0.3s infinite 3s; }
-  .intro-text { font-family: 'Bebas Neue'; font-size: 85px; color: var(--gold); letter-spacing: 6px; }
+        .light-mode {
+            --bg-dark: #f0f0f0;
+            --bg-card: #ffffff;
+            --text-main: #121212;
+            --text-dim: #555555;
+        }
 
-  @keyframes eyeBlink { 0%, 85%, 100% { transform: translate(-50%, -50%) scaleY(1); } 92% { transform: translate(-50%, -50%) scaleY(0.1); } }
-  @keyframes introFade { to { opacity: 0; visibility: hidden; } }
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
+        }
 
-  /* --- CHARGEMENT (LE POPCORN QUI TOURNE) --- */
-  #loader {
-    position: fixed; inset: 0; z-index: 8000; background: rgba(0,0,0,0.9);
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-  }
-  .spin-pop { position: relative; font-size: 60px; animation: spin 1.2s linear infinite; }
-  @keyframes spin { 100% { transform: rotate(360deg); } }
+        /* --- 1. ANIMATION MASCOTTE (INTRODUCTION) --- */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: slideUp 0.8s forwards 3s; /* Disparaît après 3s */
+        }
 
-  /* --- SIDEBAR --- */
-  #sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: var(--sidebar); background: #08090b; border-right: 1px solid var(--border); padding: 30px 20px; z-index: 100; }
-  .logo-side { font-family: 'Bebas Neue'; color: var(--gold); font-size: 24px; margin-bottom: 40px; }
-  .nav-group { margin-bottom: 30px; }
-  .nav-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; display: block; }
-  .nav-btn { background: none; border: none; color: var(--muted); width: 100%; text-align: left; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 8px; margin-bottom: 5px; transition: 0.3s; }
-  .nav-btn:hover, .nav-btn.active { background: rgba(245,200,66,0.1); color: var(--gold); }
+        .mascot-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
 
-  /* --- MAIN CONTENT --- */
-  #main { position: fixed; left: var(--sidebar); right: 0; top: 0; bottom: 0; overflow-y: auto; padding-bottom: 100px; }
-  
-  /* BARRE DE RECHERCHE REVENUE */
-  .top-bar { padding: 20px 40px; display: flex; justify-content: flex-end; position: sticky; top: 0; background: rgba(5,6,8,0.8); backdrop-filter: blur(10px); z-index: 50; }
-  .search-box { background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 10px 20px; width: 300px; display: flex; align-items: center; }
-  .search-box input { background: none; border: none; color: #fff; width: 100%; outline: none; margin-left: 10px; }
+        .eye-socket {
+            width: 120px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: eyeOpening 1s ease-in-out;
+        }
 
-  /* HERO BANNER REVENU */
-  #hero-zone { padding: 0 40px 40px 40px; }
-  .hero-card { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 21/9; cursor: pointer; border: 1px solid var(--border); }
-  .hero-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
-  .hero-content { position: absolute; bottom: 40px; left: 40px; }
-  
-  .content-zone { padding: 0 40px; }
-  .vgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-  .vcard { background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; transition: 0.3s; }
-  .vcard:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-  .vthumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
-  .vtitle { padding: 15px; font-weight: bold; font-size: 14px; line-height: 1.4; }
+        .pupil {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--primary);
+            animation: lookAround 2s infinite 1s;
+        }
 
-  /* PLAYER */
-  #modal { position: fixed; inset: 0; background: #000; z-index: 9000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-  #modal.open { display: flex; }
-</style>
+        @keyframes eyeOpening {
+            0% { transform: scaleY(0); }
+            100% { transform: scaleY(1); }
+        }
+
+        @keyframes lookAround {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-20px, 0); }
+            75% { transform: translate(20px, 0); }
+        }
+
+        @keyframes slideUp {
+            to { transform: translateY(-100%); visibility: hidden; }
+        }
+
+        /* --- 2. NAVIGATION & HEADER --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { font-size: 24px; font-weight: bold; color: var(--primary); text-transform: uppercase; }
+
+        .btn-theme {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        /* --- 3. SECTION À LA UNE (KAIZEN) --- */
+        .hero-banner {
+            padding: 40px 5%;
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .featured-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* Ratio 16:9 */
+            height: 0;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; border: none;
+        }
+
+        .featured-info { padding: 25px; }
+        .featured-info h2 { margin: 0; font-size: 2rem; }
+        .tag { background: var(--primary); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; margin-bottom: 10px; display: inline-block; }
+
+        /* --- 4. GRILLE DES VIDÉOS (NOZMAN & CO) --- */
+        .content-grid {
+            padding: 50px 5%;
+        }
+
+        .grid-title { margin-bottom: 30px; border-left: 5px solid var(--primary); padding-left: 15px; }
+
+        .videos-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .video-item {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .video-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        .thumbnail-container { position: relative; }
+        .thumbnail-container img { width: 100%; height: 180px; object-fit: cover; }
+        
+        .play-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; transition: 0.3s;
+        }
+        .video-item:hover .play-overlay { opacity: 1; }
+
+        .video-details { padding: 15px; }
+        .video-details h3 { margin: 0; font-size: 1.1rem; }
+        .video-details p { color: var(--text-dim); font-size: 0.9rem; }
+
+        /* --- 5. ANIMATION DE LANCEMENT --- */
+        #video-trigger-anim {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #333;
+            border-top: 6px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+    </style>
 </head>
 <body>
 
-<div id="intro">
-  <div class="mascot-box">🍿<div class="eye-blink">👁️</div></div>
-  <div class="intro-text">FLUX DE POP-CORN</div>
-</div>
+    <div id="loading-screen">
+        <div class="mascot-container">
+            <div class="eye-socket">
+                <div class="pupil"></div>
+            </div>
+        </div>
+        <h2 style="color: white; margin-top: 20px; letter-spacing: 5px;">CHARGEMENT</h2>
+    </div>
 
-<div id="loader">
-  <div class="spin-pop">🍿</div>
-</div>
+    <div id="video-trigger-anim">
+        <div class="spinner"></div>
+        <p>Préparation du flux...</p>
+    </div>
 
-<aside id="sidebar">
-  <div class="logo-side">🍿 FLUX DE POP-CORN</div>
-  <div class="nav-group">
-    <span class="nav-label">Menu</span>
-    <button class="nav-btn active" onclick="loadCat('home')">🔥 À LA UNE</button>
-    <button class="nav-btn" onclick="loadCat('science')">🔬 SCIENCE (NOZMAN)</button>
-    <button class="nav-btn" onclick="loadCat('films')">🎬 FILMS</button>
-    <button class="nav-btn" onclick="loadCat('jeux')">🎮 JEUX VIDÉO</button>
-  </div>
-</aside>
+    <nav>
+        <div class="logo">StreamVibe</div>
+        <button class="btn-theme" onclick="toggleMode()">MODIFIER LUMINOSITÉ</button>
+    </nav>
 
-<main id="main">
-  <div class="top-bar">
-    <div class="search-box">🔍 <input type="text" placeholder="Rechercher une vidéo..."></div>
-  </div>
-  
-  <div id="hero-zone"></div>
-  
-  <div class="content-zone">
-    <h2 id="stitle" style="font-family:'Bebas Neue'; font-size:40px; margin-bottom:25px;">À LA UNE</h2>
-    <div class="vgrid" id="grid"></div>
-  </div>
-</main>
+    <section class="hero-banner">
+        <div class="tag">À LA UNE</div>
+        <div class="featured-card">
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/wrFsapf0Enk?autoplay=0" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <div class="featured-info">
+                <h2>KAIZEN : 1 an pour gravir l'Everest</h2>
+                <p style="color: var(--text-dim);">Le documentaire événement d'Inoxtag. Une aventure humaine exceptionnelle au sommet du monde.</p>
+            </div>
+        </div>
+    </section>
 
-<div id="modal">
-  <button style="position:absolute; top:30px; right:30px; color:#fff; background:none; border:1px solid #fff; padding:10px 25px; border-radius:30px; cursor:pointer;" onclick="closeP()">FERMER ✕</button>
-  <iframe id="player" width="90%" height="80%" src="" frameborder="0" allowfullscreen allow="autoplay"></iframe>
-  <div style="font-family:'Bebas Neue'; color:var(--gold); font-size:35px; margin-top:20px;">BON VISIONNAGE</div>
-</div>
+    <section class="content-grid">
+        <h2 class="grid-title">Pour vous, les passionnés</h2>
+        
+        <div class="videos-container">
+            
+            <div class="video-item" onclick="playEffect('Docteur Nozman')">
+                <div class="thumbnail-container">
+                    <img src="https://img.youtube.com/vi/LpZ6S8-IUKw/maxresdefault.jpg" alt="Nozman">
+                    <div class="play-overlay"><span>▶ Lancer</span></div>
+                </div>
+                <div class="video-details">
+                    <h3>Les objets scientifiques les plus fous</h3>
+                    <p>Docteur Nozman • 1.2M vues</p>
+                </div>
+            </div>
 
-<script>
-const API_KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs';
-const CONFIG = {
-  science: 'UCaNlbnghtwlsGF-KzAFThqA', // LE VRAI DR NOZMAN
-  films: 'UC_i8X3p8oZNaik8X513Zn1Q',
-  jeux: 'UC0MId_C98000' // ID générique pour le test
-};
+            <div class="video-item" onclick="playEffect('Squeezie')">
+                <div class="thumbnail-container">
+                    <img src="https://img.youtube.com/vi/v5E4_6XfM-A/maxresdefault.jpg" alt="Squeezie">
+                    <div class="play-overlay"><span>▶ Lancer</span></div>
+                </div>
+                <div class="video-details">
+                    <h3>Thread Horreur : Ne restez pas seuls</h3>
+                    <p>Squeezie • 4.5M vues</p>
+                </div>
+            </div>
 
-function openP(id) {
-  const l = document.getElementById('loader');
-  l.style.display = 'flex';
-  setTimeout(() => {
-    document.getElementById('player').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-    document.getElementById('modal').classList.add('open');
-    l.style.display = 'none';
-  }, 1800);
-}
+            <div class="video-item" onclick="playEffect('Documentaire')">
+                <div class="thumbnail-container">
+                    <img src="https://img.youtube.com/vi/LXb3EKWsInQ/maxresdefault.jpg" alt="Docu">
+                    <div class="play-overlay"><span>▶ Lancer</span></div>
+                </div>
+                <div class="video-details">
+                    <h3>La vie sauvage en 4K</h3>
+                    <p>Nature Channel • 800k vues</p>
+                </div>
+            </div>
 
-function closeP() {
-  document.getElementById('player').src = "";
-  document.getElementById('modal').classList.remove('open');
-}
+        </div>
+    </section>
 
-async function loadCat(key) {
-  const g = document.getElementById('grid');
-  const hz = document.getElementById('hero-zone');
-  document.getElementById('stitle').innerText = key.toUpperCase();
-  
-  if(key === 'home') {
-    hz.innerHTML = `<div class="hero-card" onclick="openP('O-2u2CscyU0')"><img class="hero-img" src="https://i.ytimg.com/vi/O-2u2CscyU0/maxresdefault.jpg"><div class="hero-content"><span style="background:var(--gold); color:black; padding:5px 10px; border-radius:5px; font-weight:bold;">À NE PAS MANQUER</span><h1 style="font-family:'Bebas Neue'; font-size:60px;">KAIZEN — Everest</h1></div></div>`;
-    g.innerHTML = `<div class="vcard" onclick="openP('p0Z-9Q_jM2Y')"><img class="vthumb" src="https://i.ytimg.com/vi/p0Z-9Q_jM2Y/mqdefault.jpg"><div class="vtitle">Inoxtag — Nouveau Départ</div></div>`;
-    return;
-  }
+    <script>
+        // Changement de thème
+        function toggleMode() {
+            document.body.classList.toggle('light-mode');
+        }
 
-  g.innerHTML = "<p>Mise au point de l'objectif...</p>";
-  try {
-    const res = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CONFIG[key]}&part=snippet,id&order=date&maxResults=10&type=video`);
-    const data = await res.json();
-    hz.innerHTML = "";
-    g.innerHTML = "";
-    
-    // RENDER HERO (Dernière vidéo en gros)
-    const top = data.items[0];
-    hz.innerHTML = `<div class="hero-card" onclick="openP('${top.id.videoId}')"><img class="hero-img" src="https://i.ytimg.com/vi/${top.id.videoId}/maxresdefault.jpg"><div class="hero-content"><span style="background:var(--gold); color:black; padding:5px 10px; border-radius:5px; font-weight:bold;">DERNIÈRE SORTIE</span><h1 style="font-family:'Bebas Neue'; font-size:60px;">${top.snippet.title}</h1></div></div>`;
-    
-    // RENDER GRID
-    data.items.slice(1).forEach(v => {
-      g.innerHTML += `<div class="vcard" onclick="openP('${v.id.videoId}')"><img class="vthumb" src="https://i.ytimg.com/vi/${v.id.videoId}/mqdefault.jpg"><div class="vtitle">${v.snippet.title}</div></div>`;
-    });
-  } catch(e) { g.innerHTML = "Erreur de quota."; }
-}
+        // Animation de lancement de vidéo
+        function playEffect(name) {
+            const loader = document.getElementById('video-trigger-anim');
+            loader.style.display = 'flex';
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
+                alert("Ouverture de la vidéo : " + name);
+            }, 1500);
+        }
 
-setTimeout(() => loadCat('home'), 5500);
-</script>
+        // Script pour s'assurer que l'animation de la mascotte ne bloque pas le scroll
+        setTimeout(() => {
+            document.body.style.overflow = 'auto';
+        }, 3800);
+    </script>
 </body>
 </html>
