@@ -1,178 +1,96 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>PopCorn Stream | Viral Edition</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;700&display=swap');
-        
-        :root { --gold: #FFD700; --red: #E50914; --bg: #050505; --side: 260px; }
-        
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Poppins', sans-serif; overflow: hidden; }
+import React, { useState } from 'react';
 
-        /* --- L'INTRO RIDEAUX (LA VRAIE) --- */
-        #intro { position: fixed; inset: 0; z-index: 9999; display: flex; justify-content: center; align-items: center; background: #000; }
-        .curtain { position: absolute; width: 50%; height: 100%; background: #500; border: 3px solid var(--red); transition: 1.6s cubic-bezier(0.7, 0, 0.3, 1); }
-        .c-left { left: 0; transform-origin: left; }
-        .c-right { right: 0; transform-origin: right; }
-        
-        #mascot-wrap { z-index: 10000; text-align: center; opacity: 0; transition: 1s; }
-        .pop-icon { font-size: 90px; display: block; animation: spinMascot 1.5s forwards; }
-        .eye-icon { font-size: 45px; display: block; margin-top: -30px; opacity: 0; transition: 0.5s; }
-        .logo-text { font-family: 'Bebas Neue'; font-size: 5rem; color: var(--gold); filter: blur(15px); opacity: 0; transition: 1.5s; letter-spacing: 5px; }
+export default function MonEmpireAuto() {
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
-        @keyframes spinMascot { from { transform: rotate(-1080deg) scale(0); } to { transform: rotate(0deg) scale(1); } }
+  const genererBusiness = async () => {
+    if (!input) return;
+    setLoading(true);
+    
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: input }),
+      });
+      const data = await response.json();
+      setResult(JSON.parse(data.text)); // On attend du JSON de l'IA
+    } catch (error) {
+      console.error("Erreur:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        /* --- INTERFACE PRO (SIDEBAR & NAV) --- */
-        header { position: fixed; top: 0; width: 100%; height: 70px; background: #000; display: flex; align-items: center; padding: 0 30px; border-bottom: 1px solid #222; z-index: 1000; }
-        .search-container { flex: 1; display: flex; justify-content: center; }
-        .search-container input { width: 450px; background: #121212; border: 1px solid #333; color: #fff; padding: 12px 25px; border-radius: 30px; outline: none; transition: 0.3s; }
-        .search-container input:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(255,215,0,0.2); }
+  return (
+    <div className="min-h-screen bg-black text-white font-sans p-6 flex flex-col items-center">
+      {/* Header */}
+      <header className="text-center mt-10 mb-12">
+        <h1 className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-blue-500 to-green-400 bg-clip-text text-transparent">
+          MonEmpireAuto
+        </h1>
+        <p className="text-gray-400 mt-4 text-lg">L'IA qui construit ton business rentable en 60 secondes.</p>
+      </header>
 
-        .sidebar { position: fixed; left: 0; top: 70px; width: var(--side); height: 100vh; background: #000; border-right: 1px solid #222; padding: 25px 15px; }
-        .nav-link { padding: 14px 18px; border-radius: 12px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 15px; color: #888; font-weight: 600; margin-bottom: 5px; }
-        .nav-link:hover, .nav-link.active { background: #151515; color: var(--gold); }
-        .sidebar h4 { font-size: 11px; color: #444; text-transform: uppercase; margin: 25px 0 10px 15px; letter-spacing: 1px; }
-
-        main { margin-left: var(--side); padding: 100px 40px; height: 100vh; overflow-y: auto; scroll-behavior: smooth; }
-        .section-header { font-family: 'Bebas Neue'; font-size: 3rem; color: var(--gold); margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
-        .section-header::after { content: ''; height: 2px; flex: 1; background: linear-gradient(to right, var(--gold), transparent); }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
-        .v-card { background: #0f0f0f; border-radius: 16px; overflow: hidden; cursor: pointer; border: 1px solid #1a1a1a; transition: 0.4s; }
-        .v-card:hover { transform: translateY(-8px); border-color: var(--gold); box-shadow: 0 15px 30px rgba(0,0,0,0.6); }
-        .v-card img { width: 100%; height: 180px; object-fit: cover; filter: grayscale(20%); transition: 0.4s; }
-        .v-card:hover img { filter: grayscale(0%); }
-        .v-body { padding: 20px; }
-
-        /* --- LANCEUR VIDÉO --- */
-        #theater { position: fixed; inset: 0; background: #000; z-index: 20000; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .loading-spin { font-size: 100px; animation: rotating 1s infinite linear; }
-        @keyframes rotating { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    </style>
-</head>
-<body>
-
-    <div id="intro">
-        <div class="curtain c-left" id="curtain-l"></div>
-        <div class="curtain c-right" id="curtain-r"></div>
-        <div id="mascot-wrap">
-            <span class="pop-icon">🍿</span>
-            <span class="eye-icon" id="eye">👁️</span>
-            <div class="logo-text" id="logo">POPCORN STREAM</div>
+      {/* Input Section */}
+      <div className="w-full max-w-2xl bg-gray-900 p-1 rounded-2xl border border-gray-800 shadow-2xl">
+        <div className="flex p-2 gap-2">
+          <input 
+            className="flex-1 bg-transparent p-4 outline-none text-lg"
+            placeholder="Ex: J'ai 0€ et 2h par jour, que faire ?"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <button 
+            onClick={genererBusiness}
+            disabled={loading}
+            className="bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded-xl font-bold transition-all disabled:opacity-50"
+          >
+            {loading ? "Calcul du profit..." : "Générer mon plan"}
+          </button>
         </div>
-    </div>
+      </div>
 
-    <header>
-        <div style="font-family:'Bebas Neue'; color:var(--gold); font-size:35px; letter-spacing:2px;">POPCORN STREAM</div>
-        <div class="search-container"><input type="text" placeholder="Rechercher une vidéo virale..."></div>
-        <button onclick="toggleMode()" style="background:var(--gold); border:none; color:#000; padding:8px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">MODE CINÉMA</button>
-    </header>
-
-    <div class="sidebar">
-        <div class="nav-link active" onclick="load('all')">🏠 ACCUEIL</div>
-        <div class="nav-link" onclick="load('virales')">📈 VIDÉOS VIRALES</div>
-        <div class="nav-link" onclick="load('ia')">🤖 CRÉÉ PAR IA</div>
-        
-        <h4>CATÉGORIES</h4>
-        <div class="nav-link" onclick="load('jeux-video')">🎮 JEUX VIDÉO</div>
-        <div class="nav-link" onclick="load('horreur')">👻 HORREUR</div>
-        <div class="nav-link" onclick="load('zone-neutre')">🛡️ ZONE NEUTRE</div>
-
-        <h4>PROMOTEURS</h4>
-        <div class="nav-link" onclick="load('Yomi')">🚀 YOMI DENZEL</div>
-        <div class="nav-link" onclick="load('Inoxtag')">🍋 INOXTAG</div>
-    </div>
-
-    <main id="main-scroll">
-        <h2 class="section-header" id="st">À LA UNE</h2>
-        <div class="grid" id="grid"></div>
-    </main>
-
-    <div id="theater">
-        <div class="loading-spin">🍿</div>
-        <h2 id="wait-msg" style="color:var(--gold); font-family:'Bebas Neue'; margin-top:20px;">LANCEMENT DU VIRAL...</h2>
-        <div id="player-box" style="display:none; width:85%; max-width:1100px;">
-            <div style="position:relative; padding-bottom:56.25%; height:0; border:4px solid var(--gold); border-radius:20px; overflow:hidden; box-shadow:0 0 50px rgba(255,215,0,0.3);">
-                <iframe id="iframe" style="position:absolute; top:0; left:0; width:100%; height:100%;" frameborder="0" allowfullscreen></iframe>
+      {/* Result Section (Dashboard) */}
+      {result && (
+        <div className="w-full max-w-4xl mt-12 animate-fade-in">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-gray-900 border border-green-500/30 p-6 rounded-2xl shadow-lg">
+              <p className="text-gray-400 text-sm uppercase font-semibold">Estimation Gain</p>
+              <p className="text-3xl font-black text-green-400">+{result.estimation_gain}</p>
             </div>
-            <h1 style="text-align:center; color:var(--gold); font-family:'Bebas Neue'; font-size:4rem; margin-top:30px;">🍿 BON VISIONNAGE !</h1>
-            <button onclick="closeTheater()" style="display:block; margin:auto; background:none; border:2px solid #fff; color:#fff; padding:12px 35px; border-radius:30px; cursor:pointer; font-weight:bold;">RETOUR AU SITE</button>
-        </div>
-    </div>
+            <div className="bg-gray-900 border border-blue-500/30 p-6 rounded-2xl shadow-lg">
+              <p className="text-gray-400 text-sm uppercase font-semibold">Difficulté</p>
+              <p className="text-3xl font-black text-blue-400">{result.difficulte}/10</p>
+            </div>
+            <div className="bg-gray-900 border border-purple-500/30 p-6 rounded-2xl shadow-lg">
+              <p className="text-gray-400 text-sm uppercase font-semibold">Travail Requis</p>
+              <p className="text-3xl font-black text-purple-400">{result.temps_requis}</p>
+            </div>
+          </div>
 
-    <script>
-        const VIDEOS = [
-            { id: 'uMbSYAi7gNw', title: 'Remakeit.io : Faire de la TikTok Money', author: 'Yomi Denzel', cat: 'ia' },
-            { id: 'wrFsapf0Enk', title: 'KAIZEN : L\'Everest (Documentaire)', author: 'Inoxtag', cat: 'zone-neutre' },
-            { id: 'v5E4_6XfM-A', title: 'LE PIRE THREAD HORREUR', author: 'Squeezie', cat: 'horreur' },
-            { id: 'Xj_XvW5WfWk', title: 'ELDEN RING : GAMEPLAY PRO', author: 'Inoxtag', cat: 'jeux-video' }
-        ];
-
-        // 1. SÉQUENCE D'INTRO EXACTE
-        window.onload = () => {
-            setTimeout(() => document.getElementById('mascot-wrap').style.opacity = "1", 500);
-            setTimeout(() => { 
-                const eye = document.getElementById('eye');
-                eye.style.opacity = "1"; eye.style.transform = "scale(1.3)";
-            }, 1800);
-            setTimeout(() => {
-                const logo = document.getElementById('logo');
-                logo.style.filter = "blur(0px)"; logo.style.opacity = "1";
-            }, 2500);
-            setTimeout(() => {
-                document.getElementById('curtain-l').style.transform = "scaleX(0)";
-                document.getElementById('curtain-r').style.transform = "scaleX(0)";
-                document.getElementById('mascot-wrap').style.opacity = "0";
-            }, 4500);
-            setTimeout(() => {
-                document.getElementById('intro').style.display = "none";
-                document.body.style.overflow = "auto";
-            }, 6000);
-            load('all');
-        };
-
-        // 2. LOGIQUE DE CONTENU
-        function load(f) {
-            const grid = document.getElementById('grid');
-            document.getElementById('st').innerText = f.toUpperCase();
-            const data = f === 'all' ? VIDEOS : VIDEOS.filter(v => v.cat === f || v.author.includes(f));
+          <div className="bg-gray-900 border border-gray-800 p-8 rounded-3xl">
+            <h2 className="text-2xl font-bold mb-6 text-blue-500">🚀 Plan d'action : {result.business_nom}</h2>
+            <ul className="space-y-4">
+              {result.plan_action.map((etape, i) => (
+                <li key={i} className="flex items-start gap-4 text-gray-300 text-lg">
+                  <span className="bg-blue-600 text-white w-7 h-7 flex items-center justify-center rounded-full text-sm font-bold mt-1">{i+1}</span>
+                  {etape}
+                </li>
+              ))}
+            </ul>
             
-            grid.innerHTML = data.map(v => `
-                <div class="v-card" onclick="openTheater('${v.id}')">
-                    <img src="https://img.youtube.com/vi/${v.id}/maxresdefault.jpg">
-                    <div class="v-body">
-                        <h3 style="margin:0; font-size:1.1rem;">${v.title}</h3>
-                        <p style="color:var(--gold); font-size:0.8rem; margin:10px 0 0;">🔥 ${v.author}</p>
-                    </div>
-                </div>
-            `).join('');
-            document.getElementById('main-scroll').scrollTop = 0;
-        }
-
-        // 3. CINÉMA MODE
-        function openTheater(id) {
-            const th = document.getElementById('theater');
-            th.style.display = 'flex';
-            setTimeout(() => {
-                document.getElementById('wait-msg').style.display = 'none';
-                document.querySelector('.loading-spin').style.display = 'none';
-                document.getElementById('player-box').style.display = 'block';
-                document.getElementById('iframe').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-            }, 2200);
-        }
-
-        function closeTheater() {
-            document.getElementById('theater').style.display = 'none';
-            document.getElementById('iframe').src = "";
-            document.getElementById('wait-msg').style.display = 'block';
-            document.querySelector('.loading-spin').style.display = 'block';
-            document.getElementById('player-box').style.display = 'none';
-        }
-
-        function toggleMode() {
-            document.body.style.filter = document.body.style.filter === 'brightness(0.3)' ? 'brightness(1)' : 'brightness(0.3)';
-        }
-    </script>
-</body>
-</html>
+            <div className="mt-10 p-6 bg-blue-600/10 border border-blue-600/30 rounded-2xl text-center">
+              <p className="mb-4 font-semibold">Outil recommandé pour ce business :</p>
+              <a href={result.lien_outil_recommande} className="inline-block bg-blue-600 text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform">
+                Lancer avec cet outil (Gratuit)
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
