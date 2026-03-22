@@ -19,77 +19,83 @@
     background: radial-gradient(circle at 30% 30%, var(--violet) 0%, transparent 60%);
   }
 
-  /* --- TON INTRO D'ORIGINE (RIDEAUX + OEIL) --- */
+  /* --- TON INTRO D'ORIGINE (LOGO + OEIL CÔTE À CÔTE) --- */
   #intro {
     position: fixed; inset: 0; z-index: 9999; background: #000;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     animation: introFade 0.8s ease-in forwards 4.8s;
   }
   .curtain-l,.curtain-r { position:absolute; top:0; width:50%; height:100%; background:#0a0500; z-index:1; }
   .curtain-l { left:0; transform-origin:left; animation:cL 1.4s forwards .4s; }
   .curtain-r { right:0; transform-origin:right; animation:cR 1.4s forwards .4s; }
   
-  .logo-box { position:relative; z-index:2; font-size:100px; }
-  .eye-blink { position:absolute; font-size:35px; top:50%; left:50%; transform:translate(-50%,-50%); animation: eyeBlink .3s infinite 3s; }
+  .intro-content { position:relative; z-index:2; display:flex; align-items:center; gap:25px; opacity:0; animation: logoIn .8s forwards 2s; }
+  .pop-icon { font-size:90px; position:relative; }
+  .eye-icon { font-size:35px; margin-left: -10px; animation: eyeBlink .3s infinite 3s; }
+  .intro-title { font-family:'Bebas Neue'; font-size:70px; color:var(--gold); }
 
+  @keyframes logoIn { to { opacity:1; } }
   @keyframes cL { to { transform:scaleX(0); } } @keyframes cR { to { transform:scaleX(0); } }
-  @keyframes eyeBlink { 0%,85%,100% { transform:translate(-50%,-50%) scaleY(1); } 92% { transform:translate(-50%,-50%) scaleY(.1); } }
+  @keyframes eyeBlink { 0%,85%,100% { transform:scaleY(1); } 92% { transform:scaleY(.1); } }
   @keyframes introFade { to { opacity:0; visibility:hidden; } }
 
-  /* --- NOUVELLE TRANSITION "POPCORN TOURNE ET AVANCE" --- */
+  /* --- TRANSITION "TOUDOUM" : OEIL FIXÉ SUR L'EMBALLAGE --- */
   #transition-load {
     position: fixed; inset: 0; z-index: 8000; background: #000;
     display: none; flex-direction: column; align-items: center; justify-content: center;
   }
-  .pop-zoom-spin {
-    font-size: 50px;
-    animation: zoomSpin 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  .loading-pack {
+    position: relative;
+    font-size: 60px;
+    display: flex; align-items: center; justify-content: center;
+    /* Le pop-corn ET l'oeil tournent ensemble */
+    animation: zoomSpin 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-  .eye-final {
-    position: absolute; font-size: 30px; opacity: 0;
-    animation: eyeAppear 0.3s forwards 1.5s, eyeBlink .3s infinite 2s;
+  .eye-on-pack {
+    position: absolute;
+    font-size: 25px;
+    top: 55%; /* Place l'oeil précisément sur l'emballage */
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   @keyframes zoomSpin {
-    0% { transform: rotate(0deg) scale(1); }
-    70% { transform: rotate(1080deg) scale(4); }
-    100% { transform: rotate(1080deg) scale(2.5); }
+    0% { transform: rotate(0deg) scale(1); opacity: 0; }
+    20% { opacity: 1; }
+    80% { transform: rotate(1080deg) scale(4); }
+    100% { transform: rotate(1080deg) scale(3.5); }
   }
-  @keyframes eyeAppear { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
 
   /* --- INTERFACE --- */
   #sidebar { position:fixed; left:0; top:0; bottom:0; width:var(--sidebar); background:var(--surface); border-right:1px solid var(--border); z-index:100; padding:25px; }
   .nav-btn { background:none; border:none; color:var(--muted); width:100%; text-align:left; padding:12px; font-weight:700; cursor:pointer; border-radius:8px; margin-bottom:5px; transition: 0.3s; }
-  .nav-btn:hover, .nav-btn.active { background:rgba(245,200,66,0.1); color:var(--gold); }
-  
+  .nav-btn.active { background:rgba(245,200,66,0.1); color:var(--gold); }
   #main { position:fixed; left:var(--sidebar); right:0; top:0; bottom:0; overflow-y:auto; padding:80px 40px; }
   .vgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:25px; }
   .vcard { background:var(--surface); border-radius:12px; overflow:hidden; border:1px solid var(--border); cursor:pointer; transition:0.3s; }
   .vcard:hover { transform:translateY(-8px); border-color:var(--gold); }
   
-  /* PLAYER MODAL */
   #modal { position:fixed; inset:0; background:#000; z-index:9000; display:none; flex-direction: column; align-items:center; justify-content:center; }
   #modal.open { display:flex; }
-  .player-box { width:90%; max-width:1100px; aspect-ratio:16/9; position: relative; border: 1px solid #222; }
-  .player-footer { margin-top: 20px; text-align: center; }
-  .msg-vision { font-family: 'Bebas Neue'; font-size: 28px; color: var(--gold); letter-spacing: 2px; }
-  .close-x { position: absolute; top: -50px; right: 0; color: #777; cursor: pointer; background: none; border: 1px solid #333; padding: 5px 15px; border-radius: 20px; }
 </style>
 </head>
 <body>
 
 <div id="transition-load">
-    <div style="position: relative; display: flex; align-items: center; justify-content: center;">
-        <div class="pop-zoom-spin">🍿</div>
-        <div class="eye-final">👁️</div>
+    <div class="loading-pack">
+        🍿
+        <div class="eye-on-pack">👁️</div>
     </div>
-    <p id="vision-text" style="font-family:'Bebas Neue'; color:var(--gold); margin-top:120px; font-size:24px; opacity:0;">BON VISIONNAGE</p>
+    <p id="vision-text" style="font-family:'Bebas Neue'; color:var(--gold); margin-top:160px; font-size:28px; opacity:0; transition:0.5s;">BON VISIONNAGE</p>
 </div>
 
 <div id="intro">
   <div class="curtain-l"></div><div class="curtain-r"></div>
-  <div class="logo-box">🍿<div class="eye-blink">👁️</div></div>
-  <h1 style="font-family:'Bebas Neue'; font-size:60px; color:var(--gold); margin-top:20px;">POPCORN STREAM</h1>
+  <div class="intro-content">
+    <div class="pop-icon">🍿</div>
+    <div class="eye-icon">👁️</div>
+    <div class="intro-title">Popcorn Stream</div>
+  </div>
 </div>
 
 <aside id="sidebar">
@@ -107,21 +113,21 @@
 </main>
 
 <div id="modal">
-  <div class="player-box">
-    <button class="close-x" onclick="closePlayer()">FERMER ✕</button>
-    <iframe id="player" width="100%" height="100%" src="" frameborder="0" allowfullscreen allow="autoplay"></iframe>
-    <div class="player-footer">
-        <div class="msg-vision">BON VISIONNAGE</div>
-        <div style="font-size:11px; color:#555; margin-top:5px;">Hébergé par YouTube • Contenu de l'auteur original</div>
+    <button style="position:absolute; top:20px; right:30px; color:#fff; background:none; border:1px solid #fff; padding:8px 20px; border-radius:30px; cursor:pointer; z-index:10;" onclick="closePlayer()">FERMER ✕</button>
+    <div style="width:90%; max-width:1100px; aspect-ratio:16/9;">
+        <iframe id="player" width="100%" height="100%" src="" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+        <div style="text-align:center; margin-top:20px;">
+            <div style="font-family:'Bebas Neue'; font-size:30px; color:var(--gold);">BON VISIONNAGE</div>
+            <div style="font-size:12px; color:#444;">Diffuseur officiel YouTube</div>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
 const API_KEY = 'AIzaSyDXc2iuxIR4TXYr53Co43RHVii2Tc7FLgs';
 
 const CONFIG = {
-  science: { id: 'UCaNlbnghtwlsGF-KzAFThqA', label: 'Dr Nozman', icon: '🔬' }, // ID Corrigé
+  science: { id: 'UCaNlbnghtwlsGF-KzAFThqA', label: 'Dr Nozman', icon: '🔬' },
   trailers: { id: 'UC_i8X3p8oZNaik8X513Zn1Q', label: 'FilmsActu', icon: '🎬' },
   docs: { id: 'UCwI-JbGNsojunnHbFAc0M4Q', label: 'Documentaires ARTE', icon: '🌍' }
 };
@@ -131,22 +137,17 @@ const ALUNE = [
   { id:"p0Z-9Q_jM2Y", title:"Inoxtag — Nouveau Départ" }
 ];
 
-// --- TRANSITION "TOUDOUM" PERSONNALISÉE ---
 function openPlayer(id) {
     const loader = document.getElementById('transition-load');
     const vText = document.getElementById('vision-text');
     loader.style.display = 'flex';
-    
-    // Animation du texte "Bon Visionnage"
-    setTimeout(() => { vText.style.opacity = '1'; }, 1500);
-
-    // Chargement de la vidéo après l'animation
+    setTimeout(() => { vText.style.opacity = '1'; }, 1000);
     setTimeout(() => {
         document.getElementById('player').src = `https://www.youtube.com/embed/${id}?autoplay=1&modestbranding=1`;
         document.getElementById('modal').classList.add('open');
         loader.style.display = 'none';
         vText.style.opacity = '0';
-    }, 3000); // Durée totale 3s
+    }, 2500);
 }
 
 function closePlayer() {
@@ -154,13 +155,12 @@ function closePlayer() {
     document.getElementById('modal').classList.remove('open');
 }
 
-// --- LOGIQUE YOUTUBE ---
 async function updateVideos(category) {
     const today = new Date().toDateString();
     const storageKey = `pop_vids_${category}`;
     const dateKey = `pop_date_${category}`;
-    let localData = JSON.parse(localStorage.getItem(storageKey)) || [];
-    if (localStorage.getItem(dateKey) === today && localData.length > 0) return localData;
+    let cached = JSON.parse(localStorage.getItem(storageKey)) || [];
+    if (localStorage.getItem(dateKey) === today && cached.length > 0) return cached;
 
     try {
         const res = await fetch(`https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CONFIG[category].id}&part=snippet,id&order=date&maxResults=10&type=video`);
@@ -170,23 +170,22 @@ async function updateVideos(category) {
             localStorage.setItem(dateKey, today);
             return data.items;
         }
-    } catch (e) { return localData; }
+    } catch (e) { return cached; }
 }
 
 async function loadCategory(cat) {
     const grid = document.getElementById('grid');
     const heroZone = document.getElementById('hero-zone');
     document.getElementById('sec-title').textContent = CONFIG[cat].label.toUpperCase();
-    grid.innerHTML = "<p>Mise à jour du projecteur...</p>";
+    grid.innerHTML = "<p>Mise à jour...</p>";
     heroZone.innerHTML = "";
-
     const videos = await updateVideos(cat);
     if (videos) {
         grid.innerHTML = "";
         renderHero(videos[0].id.videoId, videos[0].snippet.title, CONFIG[cat].icon);
         videos.slice(1, 10).forEach(v => {
             const id = v.id.videoId;
-            grid.innerHTML += `<div class="vcard" onclick="openPlayer('${id}')"><div class="thumb-box"><img class="vthumb" src="https://img.youtube.com/vi/${id}/mqdefault.jpg"></div><div style="padding:15px; font-weight:700; font-size:13px;">${v.snippet.title}</div></div>`;
+            grid.innerHTML += `<div class="vcard" onclick="openPlayer('${id}')"><div style="position:relative; aspect-ratio:16/9;"><img style="width:100%; height:100%; object-fit:cover;" src="https://img.youtube.com/vi/${id}/mqdefault.jpg"></div><div style="padding:15px; font-weight:700; font-size:13px;">${v.snippet.title}</div></div>`;
         });
     }
 }
@@ -209,10 +208,9 @@ function displayManual() {
   grid.innerHTML = "";
   renderHero(ALUNE[0].id, ALUNE[0].title);
   ALUNE.slice(1).forEach(v => {
-    grid.innerHTML += `<div class="vcard" onclick="openPlayer('${v.id}')"><div class="thumb-box"><img class="vthumb" src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg"></div><div style="padding:15px; font-weight:700; font-size:13px;">${v.snippet ? v.snippet.title : v.title}</div></div>`;
+    grid.innerHTML += `<div class="vcard" onclick="openPlayer('${v.id}')"><div style="position:relative; aspect-ratio:16/9;"><img style="width:100%; height:100%; object-fit:cover;" src="https://img.youtube.com/vi/${v.id}/mqdefault.jpg"></div><div style="padding:15px; font-weight:700; font-size:13px;">${v.title}</div></div>`;
   });
 }
-
 setTimeout(displayManual, 5500);
 </script>
 </body>
