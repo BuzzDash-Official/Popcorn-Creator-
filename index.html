@@ -1,1 +1,84 @@
+"use client";
+import { ClerkProvider, SignInButton, SignUpButton, Show, UserButton, useUser } from "@clerk/nextjs";
+import { useState } from 'react';
 
+export default function PopcornCreator() {
+  const { isSignedIn, user } = useUser();
+  const [step, setStep] = useState(1);
+  const [ytLink, setYtLink] = useState('');
+
+  // Simulation de l'IA de Maîtrise (Gratuit et instantané)
+  const conseils = [
+    "Analyse de l'audience : Vos spectateurs décrochent à 1:20. Réduisez votre introduction de 15 secondes.",
+    "Optimisation Titre : Remplacez 'Ma vidéo' par 'Le secret que personne ne vous dit sur...'.",
+    "Confort Créateur : Votre rythme de publication est trop élevé. Passez à 1 vidéo/semaine pour doubler la qualité."
+  ];
+
+  return (
+    <div style={{ backgroundColor: '#050505', color: '#fff', minHeight: '100vh', fontFamily: 'sans-serif' }}>
+      {/* HEADER LUXE */}
+      <nav style={{ display: 'flex', justifyContent: 'space-between', padding: '20px 40px', borderBottom: '1px solid #222' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', letterSpacing: '2px' }}>POPCORN CREATOR</h1>
+        <div>
+          <Show when="signed-out"><SignInButton mode="modal" /></Show>
+          <Show when="signed-in"><UserButton /></Show>
+        </div>
+      </nav>
+
+      <main style={{ maxWidth: '800px', margin: '0 auto', padding: '100px 20px', textAlign: 'center' }}>
+        
+        {/* ETAPE 1 : ACCUEIL SI PAS CONNECTÉ */}
+        {!isSignedIn ? (
+          <div>
+            <h2 style={{ fontSize: '3.5rem', marginBottom: '20px' }}>Prenez le contrôle.</h2>
+            <p style={{ color: '#888', fontSize: '1.2rem', marginBottom: '40px' }}>Le premier cockpit de pilotage pour YouTubeurs exigeants.</p>
+            <SignUpButton mode="modal">
+              <button style={{ padding: '15px 40px', fontSize: '1.1rem', backgroundColor: '#fff', color: '#000', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold' }}>
+                COMMENCER GRATUITEMENT
+              </button>
+            </SignUpButton>
+          </div>
+        ) : (
+          /* ETAPE 2 : LE COCKPIT SI CONNECTÉ */
+          <div style={{ textAlign: 'left', background: '#111', padding: '40px', borderRadius: '30px', border: '1px solid #333' }}>
+            <h2 style={{ color: '#FFD700' }}>Bienvenue, {user.firstName} 👋</h2>
+            <p>Entrez le lien de votre dernière vidéo pour activer le Cockpit :</p>
+            
+            <input 
+              type="text" 
+              placeholder="https://youtube.com/watch?v=..." 
+              value={ytLink}
+              onChange={(e) => setYtLink(e.target.value)}
+              style={{ width: '100%', padding: '15px', borderRadius: '10px', background: '#000', border: '1px solid #444', color: '#fff', marginBottom: '20px' }}
+            />
+
+            <button 
+              onClick={() => setStep(2)}
+              style={{ width: '100%', padding: '15px', backgroundColor: '#FFD700', color: '#000', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer' }}
+            >
+              ACTIVER L'ANALYSE DE MAÎTRISE
+            </button>
+
+            {/* AFFICHAGE DES RÉSULTATS (IA SIMULÉE) */}
+            {step === 2 && (
+              <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid #333' }}>
+                <h3 style={{ color: '#FFD700' }}>📊 Rapport Popcorn Creator :</h3>
+                <ul style={{ listStyle: 'none', padding: 0 }}>
+                  {conseils.map((c, i) => (
+                    <li key={i} style={{ marginBottom: '15px', padding: '15px', background: '#1a1a1a', borderRadius: '10px', borderLeft: '4px solid #FFD700' }}>
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+                <div style={{ marginTop: '30px', textAlign: 'center', padding: '20px', background: '#fff', color: '#000', borderRadius: '15px' }}>
+                  <strong>Passer à 50k vues ?</strong><br/>
+                  <a href="https://popcorn-creator.lemonsqueezy.com" style={{ color: '#000', fontWeight: 'bold' }}>Débloquer l'accès complet (49€/mois)</a>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
